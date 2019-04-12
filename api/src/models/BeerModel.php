@@ -7,5 +7,7 @@ interface BeerModel
 
     public function getBeerById($id);
 
+    public function addNewBeer($id, $name, $description = "", $alcohol = 0, $image = "");
+
     public function idExists($id);
 }
