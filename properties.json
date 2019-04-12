@@ -1,0 +1,6 @@
+{
+  "db_ip": "localhost",
+  "db": "Beers",
+  "db_user": "root",
+  "db_passwd": "root"
+}
