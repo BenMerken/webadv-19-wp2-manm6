@@ -9,16 +9,9 @@ class PDOBeerModelTest extends TestCase
 
     public function setUp(): void
     {
-        $readJson = file_get_contents("properties.json");
-        $data = json_decode($readJson, true);
-
-        $user = $data["db_user"];
-        $password = $data["db_passwd"];
-        $databaseName = $data["testdb_name"];
-        $server = $data["db_ip"];
-        $this->connection = new PDO("mysql:host=$server;dbname=$databaseName", $user, $password);
+        $this->connection = new PDO("sqlite::memory:");
         $this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $this->connection->exec("DROP TABLE IF EXISTS beersTest");
+        $this->connection->exec("DROP TABLE IF EXISTS beers");
         $this->connection->exec(
             "CREATE TABLE beers(
                       id INT, 
@@ -38,7 +31,7 @@ class PDOBeerModelTest extends TestCase
             $beerAlcohol = $beer["alcohol"];
             $beerImage = $beer["image_base64_uri"];
             $this->connection->exec("INSERT INTO beers ( id, name, description, price, alcohol, image_base64_uri ) 
-            VALUES ( $beerId ,'$beerName' , '$beerDescription' , $beerPrice , $beerAlcohol , '$beerImage' )");
+            VALUES ( $beerId ,'$beerName' , '$beerDescription' , $beerPrice , $beerAlcohol , '$beerImage' );");
         }
     }
 
@@ -102,15 +95,89 @@ class PDOBeerModelTest extends TestCase
     public function providerNonExistingIds()
     {
         return [
-            [0],
-            [11],
-            ["abc"],
-            [true],
-            [null],
-            [-1]
+            ["4"],
+            ["1000"],
+            ["78521"],
+            [4],
+            [1000],
+            [74178],
         ];
     }
 
+    public function providerValidIds()
+    {
+        return [
+            [1],
+            [100],
+            [147],
+            [9999],
+        ];
+    }
+
+    public function providerInvalidIds()
+    {
+        return [
+            [null],
+            [true],
+            [false],
+            [-1],
+            [0],
+            ["-1"],
+            ["0"],
+            ["-9999"]
+        ];
+    }
+
+    public function providerValidNames()
+    {
+        return [
+            ["name"],
+            ["azertyui"],
+            [",;:=:feqAZEFé&é7451"]
+        ];
+    }
+
+    public function providerInvalidNames()
+    {
+        return [
+            ["abc"],
+            [""],
+            ["7"],
+            [",;"]
+        ];
+    }
+
+    public function providerValidDescription()
+    {
+        return [
+            ["This is a valid"]
+        ];
+    }
+
+    public function providerInvalidDescription()
+    {
+        return [
+            ["This is a vali"]
+        ];
+    }
+
+    public function providerValidBeerArray()
+    {
+        $imagePath = "test/database/img/Heineken.jpg";
+        $imageData = file_get_contents($imagePath);
+        $imageEncoded = base64_encode($imageData);
+
+        return [
+            [
+                4,
+                "Heineken",
+                "Although deemed to be a beer by misguided individuals, true connoisseurs know better...",
+                0.1,
+                5,
+                $imageEncoded
+            ]
+        ];
+    }
 
     /**
      * @dataProvider providerExistingIds
@@ -130,28 +197,124 @@ class PDOBeerModelTest extends TestCase
         $this->assertFalse($beerModel->idExists($id));
     }
 
-    public function testGetAllBeers()
+    /**
+     * @dataProvider providerValidIds
+     */
+    public function testValidateId_validId_void($id)
     {
-
+        $beerModel = new PDOBeerModel($this->connection);
+        $this->assertNull($beerModel->validateId($id));
     }
 
-    public function testAddNewBeer()
+    /**
+     * @dataProvider providerInvalidIds
+     */
+    public function testValidateId_invalidId_throwInvalidArgumentException($id)
     {
-
+        $exceptionMessage = "De id parameter moet een geheel getal, groter dan nul bevatten.";
+        $beerModel = new PDOBeerModel($this->connection);
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage($exceptionMessage);
+        $beerModel->validateId($id);
     }
 
-    public function testValidateId()
+    /**
+     * @dataProvider providerValidNames
+     */
+    public function testValidateName_validName_void($name)
     {
-
+        $beerModel = new PDOBeerModel($this->connection);
+        $this->assertNull($beerModel->validateName($name));
     }
 
-    public function testValidateName()
+    /**
+     * @dataProvider providerInvalidNames
+     */
+    public function testValidateName_invalidName_throwInvalidArgumentException($name)
     {
-
+        $exceptionMessage = "De name parameter moet een string van minstens 4 karakters lang zijn.";
+        $beerModel = new PDOBeerModel($this->connection);
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage($exceptionMessage);
+        $beerModel->validateName($name);
     }
 
-    public function testGetBeerById()
+    /**
+     * @dataProvider providerValidDescription
+     */
+    public function testValidateDescription_validDescription_void($description)
     {
+        $beerModel = new PDOBeerModel($this->connection);
+        $this->assertNull($beerModel->validateDescription($description));
+    }
 
+    /**
+     * @dataProvider providerInvalidDescription
+     */
+    public function testValidateDescription_invalidDescription_throwInvalidArgumentException($description)
+    {
+        $exceptionMessage = "De description parameter moet een string van minstens 15 karakters lang zijn.";
+        $beerModel = new PDOBeerModel($this->connection);
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage($exceptionMessage);
+        $beerModel->validateDescription($description);
+    }
+
+    public function testGetAllBeers_arrayBeers()
+    {
+        $beerModel = new PDOBeerModel($this->connection);
+        $actualBeers = $beerModel->getAllBeers();
+        $expectedBeers = $this->providerBeers();
+        $this->assertEquals('array', gettype($actualBeers));
+        $this->assertEquals(count($expectedBeers), count($actualBeers));
+        foreach ($actualBeers as $actualBeer) {
+            $this->assertContains($actualBeer, $expectedBeers);
+        }
+    }
+
+    /**
+     * @dataProvider providerExistingIds
+     */
+    public function testGetBeerById_existingId_arrayBeer($id)
+    {
+        $beerModel = new PDOBeerModel($this->connection);
+        $actualBeer = $beerModel->getBeerById($id);
+        $expectedBeer = $this->providerBeers()[$id - 1];
+        $this->assertEquals("array", gettype($actualBeer));
+        $this->assertEquals(count($expectedBeer), count($actualBeer));
+        $this->assertEquals($expectedBeer, $actualBeer);
+    }
+
+    /**
+     * @dataProvider providerNonExistingIds
+     */
+    public function testGetBeerById_nonExistingId_emptyArray($id)
+    {
+        $beerModel = new PDOBeerModel($this->connection);
+        $actualBeer = $beerModel->getBeerById($id);
+        $this->assertEquals([], $actualBeer);
+    }
+
+    /**
+     * @dataProvider providerValidBeerArray
+     */
+    public function testAddNewBeer_validBeerArray_beerArray($id, $name, $description, $price, $alcohol, $image)
+    {
+        $beerModel = new PDOBeerModel($this->connection);
+        $actualAddedBeer = $beerModel->addNewBeer($id, $name, $description, $price, $alcohol, $image);
+        $allBeersBefore = $this->providerBeers();
+        $allBeersAfter = $beerModel->getAllBeers();
+
+        $this->assertEquals("array", gettype($actualAddedBeer));
+        $this->assertEquals(count($allBeersBefore) + 1, count($allBeersAfter));
+        $this->assertEquals($actualAddedBeer,
+            [
+                "id" => $id,
+                "name" => $name,
+                "description" => $description,
+                "price" => $price,
+                "alcohol" => $alcohol,
+                "image_base64_uri" => $image
+            ]);
     }
 }

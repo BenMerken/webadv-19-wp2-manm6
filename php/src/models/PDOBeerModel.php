@@ -16,24 +16,27 @@ class PDOBeerModel implements BeerModel
 
     public function getAllBeers(): array
     {
-        $statement = $this->pdo->prepare("SELECT * FROM beers");
+        $statement = $this->pdo->prepare("SELECT * FROM beers;");
         $statement->bindColumn(1, $id, \PDO::PARAM_INT);
         $statement->bindColumn(2, $name, \PDO::PARAM_STR);
         $statement->bindColumn(3, $description, \PDO::PARAM_STR);
-        $statement->bindColumn(4, $alcohol, \PDO::PARAM_STR);
-        $statement->bindColumn(5, $image, \PDO::PARAM_LOB);
+        $statement->bindColumn(4, $price, \PDO::PARAM_STR);
+        $statement->bindColumn(5, $alcohol, \PDO::PARAM_STR);
+        $statement->bindColumn(6, $image, \PDO::PARAM_LOB);
         $statement->execute();
 
         $beers = [];
         while ($statement->fetch(\PDO::FETCH_BOUND)) {
 
-            $beers[] = [
-                "id" => $id,
-                "name" => $name,
-                "description" => $description,
-                "alcohol" => floatval($alcohol),
-                "image_base64_uri" => $image
-            ];
+            array_push($beers,
+                [
+                    "id" => $id,
+                    "name" => $name,
+                    "description" => $description,
+                    "price" => floatval($price),
+                    "alcohol" => floatval($alcohol),
+                    "image_base64_uri" => $image
+                ]);
         }
 
         return $beers;
@@ -43,50 +46,64 @@ class PDOBeerModel implements BeerModel
     {
         if ($this->idExists($idExistingBeer)) {
 
-            $statement = $this->pdo->prepare("SELECT * FROM beers WHERE id=?");
-            $statement->bindParam(1, $idExistingBeer);
+            $statement = $this->pdo->prepare("SELECT * FROM beers WHERE id=:id;");
+            $statement->bindParam(":id", $idExistingBeer, \PDO::PARAM_INT);
             $statement->bindColumn(1, $id, \PDO::PARAM_INT);
             $statement->bindColumn(2, $name, \PDO::PARAM_STR);
             $statement->bindColumn(3, $description, \PDO::PARAM_STR);
-            $statement->bindColumn(4, $alcohol, \PDO::PARAM_STR);
-            $statement->bindColumn(5, $image, \PDO::PARAM_LOB);
+            $statement->bindColumn(4, $price, \PDO::PARAM_STR);
+            $statement->bindColumn(5, $alcohol, \PDO::PARAM_STR);
+            $statement->bindColumn(6, $image, \PDO::PARAM_LOB);
             $statement->execute();
 
-            $beer = [
-                "id" => $id,
-                "name" => $name,
-                "description" => $description,
-                "alcohol" => floatval($alcohol),
-                "image_base64_uri" => $image
-            ];
+            while ($statement->fetch(\PDO::FETCH_BOUND)) {
+                $beer = [
+                    "id" => $id,
+                    "name" => $name,
+                    "description" => $description,
+                    "price" => $price,
+                    "alcohol" => floatval($alcohol),
+                    "image_base64_uri" => $image
+                ];
+            }
 
             return $beer;
         }
 
-        return null;
+        return [];
     }
 
-    public function addNewBeer($id, $name, $description = "", $alcohol = 0, $image = "")
+    public function addNewBeer($id, $name, $description = "", $price = 0, $alcohol = 0, $image = ""): array
     {
         $this->validateId($id);
         $this->validateName($name);
+        $this->validateDescription($description);
 
-        $statement = $this->pdo->prepare(
-            "INSERT INTO beers(
-        id, name, description, alcohol, image) 
-        VALUES(:id,:name,:description,:alcohol,:image) 
-        ON DUPLICATE KEY UPDATE id=:id+1");
+        $statement = null;
+        if ($this->pdo->getAttribute(\PDO::ATTR_DRIVER_NAME) == "sqlite") {
+            $statement = $this->pdo->prepare("INSERT INTO beers(
+        id, name, description, price, alcohol, image_base64_uri) 
+        VALUES(:id, :name, :description, :price, :alcohol, :image)");
+        } else {
+            $statement = $this->pdo->prepare(
+                "INSERT INTO beers(
+        id, name, description, price, alcohol, image_base64_uri) 
+        VALUES(:id, :name, :description, :price, :alcohol, :image) 
+        ON DUPLICATE KEY UPDATE id=:id, name=:name, description=:description, price=:price, alchol=:alcohol, image_base64_uri=:image;");
+        }
         $statement->bindParam(":id", $id, \PDO::PARAM_INT);
         $statement->bindParam(":name", $name, \PDO::PARAM_STR);
         $statement->bindParam(":description", $description, \PDO::PARAM_STR);
+        $statement->bindParam(":price", $price, \PDO::PARAM_STR);
         $statement->bindParam(":alcohol", $alcohol, \PDO::PARAM_STR);
-        $statement->bindParam(":image_base64_uri", $image, \PDO::PARAM_LOB);
+        $statement->bindParam(":image", $image, \PDO::PARAM_LOB);
         $statement->execute();
 
         return [
             "id" => $id,
             "name" => $name,
             "description" => $description,
+            "price" => $price,
             "alcohol" => $alcohol,
             "image_base64_uri" => $image
         ];
@@ -95,8 +112,8 @@ class PDOBeerModel implements BeerModel
     public function idExists($id): bool
     {
         $this->validateId($id);
-        $statement = $this->pdo->prepare("SELECT id FROM beers WHERE id=?");
-        $statement->bindParam(1, $id, \PDO::PARAM_INT);
+        $statement = $this->pdo->prepare("SELECT id FROM beers WHERE id=:id;");
+        $statement->bindParam(":id", $id, \PDO::PARAM_INT);
         $statement->execute();
         if ($statement->fetch() === false) {
             return false;
@@ -107,9 +124,9 @@ class PDOBeerModel implements BeerModel
 
     public function validateId($id)
     {
-        if (!(is_string($id) &&
-            preg_match("/^[0-9]+$/", $id)
-            && (int)$id > 0)) {
+        if (!(preg_match("/^[0-9]+$/", strval($id))
+            && (int)$id > 0
+            && !is_bool($id))) {
 
             throw new \InvalidArgumentException(
                 "De id parameter moet een geheel getal, groter dan nul bevatten.");
@@ -121,8 +138,18 @@ class PDOBeerModel implements BeerModel
         if (!(is_string($name) &&
             strlen($name) >= 4)) {
 
-            throw new InvalidArgumentException(
+            throw new \InvalidArgumentException(
                 "De name parameter moet een string van minstens 4 karakters lang zijn.");
+        }
+    }
+
+    public function validateDescription($description)
+    {
+        if (!(is_string($description) &&
+            strlen($description) >= 15)) {
+
+            throw new \InvalidArgumentException(
+                "De description parameter moet een string van minstens 15 karakters lang zijn.");
         }
     }
 }

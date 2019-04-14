@@ -33,7 +33,7 @@ Zet deze phpmd.phar file in de php-folder in het project:
 
 #### "Wat is die bundle.js?"
 
-
+[VERDER AANVULLEN!!!!]
 
 ### Credits
 
