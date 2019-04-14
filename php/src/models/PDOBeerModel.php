@@ -79,18 +79,18 @@ class PDOBeerModel implements BeerModel
         $this->validateName($name);
         $this->validateDescription($description);
 
-        $statement = null;
+        $statement = $this->pdo->prepare(
+            "INSERT INTO beers(
+        id, name, description, price, alcohol, image_base64_uri) 
+        VALUES(:id, :name, :description, :price, :alcohol, :image) 
+        ON DUPLICATE KEY UPDATE id=:id, name=:name, description=:description, price=:price, alchol=:alcohol, image_base64_uri=:image;");
+
         if ($this->pdo->getAttribute(\PDO::ATTR_DRIVER_NAME) == "sqlite") {
             $statement = $this->pdo->prepare("INSERT INTO beers(
         id, name, description, price, alcohol, image_base64_uri) 
         VALUES(:id, :name, :description, :price, :alcohol, :image)");
-        } else {
-            $statement = $this->pdo->prepare(
-                "INSERT INTO beers(
-        id, name, description, price, alcohol, image_base64_uri) 
-        VALUES(:id, :name, :description, :price, :alcohol, :image) 
-        ON DUPLICATE KEY UPDATE id=:id, name=:name, description=:description, price=:price, alchol=:alcohol, image_base64_uri=:image;");
         }
+
         $statement->bindParam(":id", $id, \PDO::PARAM_INT);
         $statement->bindParam(":name", $name, \PDO::PARAM_STR);
         $statement->bindParam(":description", $description, \PDO::PARAM_STR);
