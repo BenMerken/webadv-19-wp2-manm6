@@ -17,12 +17,12 @@ class PDOBeerModel implements BeerModel
     public function getAllBeers(): array
     {
         $statement = $this->pdo->prepare("SELECT * FROM beers");
-        $statement->execute();
         $statement->bindColumn(1, $id, \PDO::PARAM_INT);
         $statement->bindColumn(2, $name, \PDO::PARAM_STR);
         $statement->bindColumn(3, $description, \PDO::PARAM_STR);
         $statement->bindColumn(4, $alcohol, \PDO::PARAM_STR);
         $statement->bindColumn(5, $image, \PDO::PARAM_LOB);
+        $statement->execute();
 
         $beers = [];
         while ($statement->fetch(\PDO::FETCH_BOUND)) {
@@ -32,7 +32,7 @@ class PDOBeerModel implements BeerModel
                 "name" => $name,
                 "description" => $description,
                 "alcohol" => floatval($alcohol),
-                "image" => $image
+                "image_base64_uri" => $image
             ];
         }
 
@@ -45,19 +45,19 @@ class PDOBeerModel implements BeerModel
 
             $statement = $this->pdo->prepare("SELECT * FROM beers WHERE id=?");
             $statement->bindParam(1, $idExistingBeer);
-            $statement->execute();
             $statement->bindColumn(1, $id, \PDO::PARAM_INT);
             $statement->bindColumn(2, $name, \PDO::PARAM_STR);
             $statement->bindColumn(3, $description, \PDO::PARAM_STR);
             $statement->bindColumn(4, $alcohol, \PDO::PARAM_STR);
             $statement->bindColumn(5, $image, \PDO::PARAM_LOB);
+            $statement->execute();
 
             $beer = [
                 "id" => $id,
                 "name" => $name,
                 "description" => $description,
                 "alcohol" => floatval($alcohol),
-                "image" => $image
+                "image_base64_uri" => $image
             ];
 
             return $beer;
@@ -72,14 +72,15 @@ class PDOBeerModel implements BeerModel
         $this->validateName($name);
 
         $statement = $this->pdo->prepare(
-            "INSERT INTO beers(id, name, description, alcohol, image) " .
-            "VALUES(:id,:name,:description,:alcohol,:image) " .
-            "ON DUPLICATE KEY UPDATE id=:id+1");
+            "INSERT INTO beers(
+        id, name, description, alcohol, image) 
+        VALUES(:id,:name,:description,:alcohol,:image) 
+        ON DUPLICATE KEY UPDATE id=:id+1");
         $statement->bindParam(":id", $id, \PDO::PARAM_INT);
         $statement->bindParam(":name", $name, \PDO::PARAM_STR);
         $statement->bindParam(":description", $description, \PDO::PARAM_STR);
         $statement->bindParam(":alcohol", $alcohol, \PDO::PARAM_STR);
-        $statement->bindParam(":image", $image, \PDO::PARAM_LOB);
+        $statement->bindParam(":image_base64_uri", $image, \PDO::PARAM_LOB);
         $statement->execute();
 
         return [
@@ -87,7 +88,7 @@ class PDOBeerModel implements BeerModel
             "name" => $name,
             "description" => $description,
             "alcohol" => $alcohol,
-            "image" => $image
+            "image_base64_uri" => $image
         ];
     }
 

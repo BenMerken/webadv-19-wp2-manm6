@@ -2,5 +2,7 @@
   "db_ip": "localhost",
   "db_name": "Beers",
   "db_user": "root",
-  "db_passwd": "root"
+  "db_passwd": "root",
+
+  "testdb_name": "TestBeers"
 }

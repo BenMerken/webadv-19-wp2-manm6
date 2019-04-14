@@ -8,7 +8,7 @@ use \models\PDOBeerModel;
 the database properties.
 */
 
-$readJson = file_get_contents('../properties.json');
+$readJson = file_get_contents('properties.json');
 $data = json_decode($readJson, true);
 
 $user = $data["db_user"];
