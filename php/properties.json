@@ -1,8 +1,8 @@
 {
-  "db_ip": "localhost",
-  "db_name": "Beers",
-  "db_user": "root",
-  "db_passwd": "root",
+  "db_ip": "",
+  "db_name": "",
+  "db_user": "",
+  "db_passwd": "",
 
-  "testdb_name": "TestBeers"
+  "testdb_name": ""
 }

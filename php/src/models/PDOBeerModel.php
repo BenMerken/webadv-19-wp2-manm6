@@ -2,9 +2,6 @@
 
 namespace models;
 
-
-use http\Exception\InvalidArgumentException;
-
 class PDOBeerModel implements BeerModel
 {
     private $pdo = null;
@@ -56,6 +53,7 @@ class PDOBeerModel implements BeerModel
             $statement->bindColumn(6, $image, \PDO::PARAM_LOB);
             $statement->execute();
 
+            $beer = [];
             while ($statement->fetch(\PDO::FETCH_BOUND)) {
                 $beer = [
                     "id" => $id,
@@ -79,18 +77,16 @@ class PDOBeerModel implements BeerModel
         $this->validateName($name);
         $this->validateDescription($description);
 
-        $statement = $this->pdo->prepare(
-            "INSERT INTO beers(
+        $query = "INSERT INTO beers(
         id, name, description, price, alcohol, image_base64_uri) 
         VALUES(:id, :name, :description, :price, :alcohol, :image) 
-        ON DUPLICATE KEY UPDATE id=:id, name=:name, description=:description, price=:price, alchol=:alcohol, image_base64_uri=:image;");
-
+        ON DUPLICATE KEY UPDATE id=:id, name=:name, description=:description, price=:price, alchol=:alcohol, image_base64_uri=:image;";
         if ($this->pdo->getAttribute(\PDO::ATTR_DRIVER_NAME) == "sqlite") {
-            $statement = $this->pdo->prepare("INSERT INTO beers(
+            $query = "INSERT INTO beers(
         id, name, description, price, alcohol, image_base64_uri) 
-        VALUES(:id, :name, :description, :price, :alcohol, :image)");
+        VALUES(:id, :name, :description, :price, :alcohol, :image);";
         }
-
+        $statement = $this->pdo->prepare($query);
         $statement->bindParam(":id", $id, \PDO::PARAM_INT);
         $statement->bindParam(":name", $name, \PDO::PARAM_STR);
         $statement->bindParam(":description", $description, \PDO::PARAM_STR);
@@ -115,11 +111,7 @@ class PDOBeerModel implements BeerModel
         $statement = $this->pdo->prepare("SELECT id FROM beers WHERE id=:id;");
         $statement->bindParam(":id", $id, \PDO::PARAM_INT);
         $statement->execute();
-        if ($statement->fetch() === false) {
-            return false;
-        }
-
-        return true;
+        return ($statement->fetch() == true);
     }
 
     public function validateId($id)
