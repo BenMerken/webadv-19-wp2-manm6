@@ -17,7 +17,8 @@ Deze JSON-file wordt ingelezen in een "associative array", en aangeroepen via de
 ![alt text][img_propertiesJsonCode]
 
 Op deze manier kan alle informatie van de gebruikte database centraal op één plaats worden
-bijgehouden en eventueel aangepast.
+bijgehouden en eventueel aangepast. Deze .json-file moet je zelf aanmaken, want deze waarden zijn
+variabel. 
 
 #### MVC
 #### Models
@@ -88,6 +89,9 @@ database, wordt de statuscode 200 (OK). Hierna wordt een Beer-object aangemaakt 
 doorgegeven parameters. Indien een exception wordt opgegooid tijdens deze creatie, wordt de statuscode veranderd in een
 foutcode, ofwel 400 (bad request) ofwel 500 (internal server error), al naargelang de soort exception. Ten slotte wordt
 de beer array/null object en de statuscode doorgegeven aan de show() functie van het jsonBeerView object.
+
+#### App.php
+
 
 
 #### PHPMD

@@ -14,7 +14,7 @@ class PDOBeerModel implements BeerModel
     public function getAllBeers(): array
     {
         $statement = $this->pdo->prepare("SELECT * FROM beers;");
-        $statement->bindColumn(1, $id, \PDO::PARAM_INT);
+        $statement->bindColumn(1, $beerId, \PDO::PARAM_INT);
         $statement->bindColumn(2, $name, \PDO::PARAM_STR);
         $statement->bindColumn(3, $description, \PDO::PARAM_STR);
         $statement->bindColumn(4, $price, \PDO::PARAM_STR);
@@ -27,7 +27,7 @@ class PDOBeerModel implements BeerModel
 
             array_push($beers,
                 [
-                    "id" => $id,
+                    "id" => $beerId,
                     "name" => $name,
                     "description" => $description,
                     "price" => floatval($price),
@@ -45,7 +45,7 @@ class PDOBeerModel implements BeerModel
 
             $statement = $this->pdo->prepare("SELECT * FROM beers WHERE id=:id;");
             $statement->bindParam(":id", $idExistingBeer, \PDO::PARAM_INT);
-            $statement->bindColumn(1, $id, \PDO::PARAM_INT);
+            $statement->bindColumn(1, $beerId, \PDO::PARAM_INT);
             $statement->bindColumn(2, $name, \PDO::PARAM_STR);
             $statement->bindColumn(3, $description, \PDO::PARAM_STR);
             $statement->bindColumn(4, $price, \PDO::PARAM_STR);
@@ -56,7 +56,7 @@ class PDOBeerModel implements BeerModel
             $beer = [];
             while ($statement->fetch(\PDO::FETCH_BOUND)) {
                 $beer = [
-                    "id" => $id,
+                    "id" => $beerId,
                     "name" => $name,
                     "description" => $description,
                     "price" => $price,
@@ -64,16 +64,14 @@ class PDOBeerModel implements BeerModel
                     "image_base64_uri" => $image
                 ];
             }
-
             return $beer;
         }
-
         return [];
     }
 
-    public function addNewBeer($id, $name, $description = "", $price = 0, $alcohol = 0, $image = ""): array
+    public function addNewBeer($beerId, $name, $description = "", $price = 0, $alcohol = 0, $image = ""): array
     {
-        $this->validateId($id);
+        $this->validateId($beerId);
         $this->validateName($name);
         $this->validateDescription($description);
 
@@ -87,7 +85,7 @@ class PDOBeerModel implements BeerModel
         VALUES(:id, :name, :description, :price, :alcohol, :image);";
         }
         $statement = $this->pdo->prepare($query);
-        $statement->bindParam(":id", $id, \PDO::PARAM_INT);
+        $statement->bindParam(":id", $beerId, \PDO::PARAM_INT);
         $statement->bindParam(":name", $name, \PDO::PARAM_STR);
         $statement->bindParam(":description", $description, \PDO::PARAM_STR);
         $statement->bindParam(":price", $price, \PDO::PARAM_STR);
@@ -96,7 +94,7 @@ class PDOBeerModel implements BeerModel
         $statement->execute();
 
         return [
-            "id" => $id,
+            "id" => $beerId,
             "name" => $name,
             "description" => $description,
             "price" => $price,
@@ -105,20 +103,20 @@ class PDOBeerModel implements BeerModel
         ];
     }
 
-    public function idExists($id): bool
+    public function idExists($beerId): bool
     {
-        $this->validateId($id);
+        $this->validateId($beerId);
         $statement = $this->pdo->prepare("SELECT id FROM beers WHERE id=:id;");
-        $statement->bindParam(":id", $id, \PDO::PARAM_INT);
+        $statement->bindParam(":id", $beerId, \PDO::PARAM_INT);
         $statement->execute();
         return ($statement->fetch() == true);
     }
 
-    public function validateId($id)
+    public function validateId($beerId)
     {
-        if (!(preg_match("/^[0-9]+$/", strval($id))
-            && (int)$id > 0
-            && !is_bool($id))) {
+        if (!(preg_match("/^[0-9]+$/", strval($beerId))
+            && (int)$beerId > 0
+            && !is_bool($beerId))) {
 
             throw new \InvalidArgumentException(
                 "De id parameter moet een geheel getal, groter dan nul bevatten.");

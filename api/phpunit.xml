@@ -15,7 +15,7 @@
         <whitelist
                 addUncoveredFilesFromWhitelist="true"
                 processUncoveredFilesFromWhitelist="true">
-            <directory suffix=".php">./src</directory>
+            <directory suffix=".php">../coverage</directory>
         </whitelist>
     </filter>
 

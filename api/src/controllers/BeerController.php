@@ -29,15 +29,30 @@ class BeerController
         $this->jsonBeersView->show(["beers" => $beers, "statuscode" => $statuscode]);
     }
 
-    public function addNewBeer($id, $name, $description = "", $price = 0, $alcohol = 0, $image = "")
+    public function getBeerById($beerId)
+    {
+        $statuscode = 200;
+        $beer = [];
+        try {
+            $beer = $this->beerModel->getBeerById($beerId);
+            if ($beer == []) {
+                $statuscode = 404;
+            }
+        } catch (\PDOException $exception) {
+            $statuscode = 500;
+        }
+        $this->jsonBeerView->show(["beer" => $beer, "statuscode" => $statuscode]);
+    }
+
+    public function addNewBeer($beerId, $name, $description = "", $price = 0, $alcohol = 0, $image = "")
     {
         $statuscode = 201;
         $beer = [];
         try {
-            if ($this->beerModel->idExists($id)) {
+            if ($this->beerModel->idExists($beerId)) {
                 $statuscode = 200;
             }
-            $beer = $this->beerModel->addNewBeer($id, $name, $description, $price, $alcohol, $image);
+            $beer = $this->beerModel->addNewBeer($beerId, $name, $description, $price, $alcohol, $image);
         } catch (\InvalidArgumentException $exception) {
             $statuscode = 400;
         } catch (\PDOException $exception) {
