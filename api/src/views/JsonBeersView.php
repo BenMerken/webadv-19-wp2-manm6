@@ -1,6 +1,5 @@
 <?php namespace views;
 
-
 class JsonBeersView
 {
     public function show(array $data)

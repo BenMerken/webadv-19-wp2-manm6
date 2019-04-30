@@ -14,18 +14,18 @@ class PDOBeerModel implements BeerModel
     public function getAllBeers(): array
     {
         $statement = $this->pdo->prepare("SELECT * FROM beers;");
+        $statement->execute();
         $statement->bindColumn(1, $beerId, \PDO::PARAM_INT);
         $statement->bindColumn(2, $name, \PDO::PARAM_STR);
         $statement->bindColumn(3, $description, \PDO::PARAM_STR);
         $statement->bindColumn(4, $price, \PDO::PARAM_STR);
         $statement->bindColumn(5, $alcohol, \PDO::PARAM_STR);
         $statement->bindColumn(6, $image, \PDO::PARAM_LOB);
-        $statement->execute();
 
         $beers = [];
         while ($statement->fetch(\PDO::FETCH_BOUND)) {
 
-            array_push($beers,
+            $beers[] =
                 [
                     "id" => $beerId,
                     "name" => $name,
@@ -33,7 +33,7 @@ class PDOBeerModel implements BeerModel
                     "price" => floatval($price),
                     "alcohol" => floatval($alcohol),
                     "image_base64_uri" => $image
-                ]);
+                ];
         }
 
         return $beers;
@@ -59,7 +59,7 @@ class PDOBeerModel implements BeerModel
                     "id" => $beerId,
                     "name" => $name,
                     "description" => $description,
-                    "price" => $price,
+                    "price" => floatval($price),
                     "alcohol" => floatval($alcohol),
                     "image_base64_uri" => $image
                 ];

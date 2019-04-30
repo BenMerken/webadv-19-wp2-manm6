@@ -98,5 +98,5 @@ npm-debug.log
 yarn-error.log
 .env
 .phpunit.result.cache
-/api/properties.json
+api/properties.json
 

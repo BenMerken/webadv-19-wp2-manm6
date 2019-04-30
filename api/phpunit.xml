@@ -15,12 +15,12 @@
         <whitelist
                 addUncoveredFilesFromWhitelist="true"
                 processUncoveredFilesFromWhitelist="true">
-            <directory suffix=".php">../coverage</directory>
+            <directory suffix=".php">./src/models</directory>
         </whitelist>
     </filter>
 
     <logging>
-        <log type="coverage-html" target="./test/coverage/html/"/>
+        <log type="coverage-html" target="../coverage/html/"/>
     </logging>
 
 </phpunit>
