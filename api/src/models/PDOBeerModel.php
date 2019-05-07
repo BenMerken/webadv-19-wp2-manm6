@@ -24,16 +24,14 @@ class PDOBeerModel implements BeerModel
 
         $beers = [];
         while ($statement->fetch(\PDO::FETCH_BOUND)) {
-
-            $beers[] =
-                [
-                    "id" => $beerId,
-                    "name" => $name,
-                    "description" => $description,
-                    "price" => floatval($price),
-                    "alcohol" => floatval($alcohol),
-                    "image_base64_uri" => $image
-                ];
+            $beers[]= [
+                "id" => $beerId,
+                "name" => $name,
+                "description" => $description,
+                "price" => floatval($price),
+                "alcohol" => floatval($alcohol),
+                "image_base64_uri" => $image
+            ];
         }
 
         return $beers;
@@ -69,12 +67,36 @@ class PDOBeerModel implements BeerModel
         return [];
     }
 
-    public function addNewBeer($beerId, $name, $description = "", $price = 0, $alcohol = 0, $image = ""): array
+    public function addNewBeer($name, $description, $price, $alcohol, $image): array
     {
-        $this->validateId($beerId);
         $this->validateName($name);
         $this->validateDescription($description);
 
+        $query = "INSERT INTO beers(
+        name, description, price, alcohol, image_base64_uri) 
+        VALUES(:name, :description, :price, :alcohol, :image);";
+        $statement = $this->pdo->prepare($query);
+        $statement->bindParam(":name", $name, \PDO::PARAM_STR);
+        $statement->bindParam(":description", $description, \PDO::PARAM_STR);
+        $statement->bindParam(":price", $price, \PDO::PARAM_STR);
+        $statement->bindParam(":alcohol", $alcohol, \PDO::PARAM_STR);
+        $statement->bindParam(":image", $image, \PDO::PARAM_LOB);
+        $statement->execute();
+
+        $beerId = intval($this->pdo->lastInsertId());
+
+        return [
+            "id" => $beerId,
+            "name" => $name,
+            "description" => $description,
+            "price" => $price,
+            "alcohol" => $alcohol,
+            "image_base64_uri" => $image
+        ];
+    }
+
+    public function putBeer($beerId, $name, $description, $price, $alcohol, $image)
+    {
         $query = "INSERT INTO beers(
         id, name, description, price, alcohol, image_base64_uri) 
         VALUES(:id, :name, :description, :price, :alcohol, :image) 
@@ -84,13 +106,14 @@ class PDOBeerModel implements BeerModel
         id, name, description, price, alcohol, image_base64_uri) 
         VALUES(:id, :name, :description, :price, :alcohol, :image);";
         }
+
         $statement = $this->pdo->prepare($query);
         $statement->bindParam(":id", $beerId, \PDO::PARAM_INT);
-        $statement->bindParam(":name", $name, \PDO::PARAM_STR);
+        $statement->bindParam("name", $name, \PDO::PARAM_STR);
         $statement->bindParam(":description", $description, \PDO::PARAM_STR);
         $statement->bindParam(":price", $price, \PDO::PARAM_STR);
-        $statement->bindParam(":alcohol", $alcohol, \PDO::PARAM_STR);
-        $statement->bindParam(":image", $image, \PDO::PARAM_LOB);
+        $statement->bindParam(":alcohol", $alcohol, \PDO::PARAM_INT);
+        $statement->bindParam(":image", $image, \PDO::PARAM_INT);
         $statement->execute();
 
         return [
@@ -99,7 +122,7 @@ class PDOBeerModel implements BeerModel
             "description" => $description,
             "price" => $price,
             "alcohol" => $alcohol,
-            "image_base64_uri" => $image
+            "image_base64_url" => $image
         ];
     }
 

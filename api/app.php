@@ -50,7 +50,7 @@ try {
 
     $router->map(
         "GET",
-        "beers/[:id]",
+        "beers/[i:id]",
         function ($id) use ($beerController) {
             $beerController->getBeerById($id);
         }
@@ -63,21 +63,18 @@ try {
             $requestBody = file_get_contents("php://input", "r");
             $jsonObject = json_decode($requestBody, true);
             if (!(
-                isset($jsonObject["id"]) &&
                 isset($jsonObject["name"]) &&
                 isset($jsonObject["description"]) &&
                 isset($jsonObject["price"]) &&
-                isset($jsonObject["alcohol"]) &&
-                isset($jsonObject["image_base64_uri"]))) {
+                isset($jsonObject["alcohol"]))) {
                 throw  new \InvalidArgumentException();
             }
-            $beerId = $jsonObject["id"];
             $name = $jsonObject["name"];
             $description = $jsonObject["description"];
             $price = $jsonObject["price"];
             $alcohol = $jsonObject["alcohol"];
-            $image = $jsonObject["image_base64_uri"];
-            $beerController->addNewBeer($beerId, $name, $description, $price, $alcohol, $image);
+            $image = isset($jsonObject["image_base64_uri"]) ? $jsonObject["image_base64_uri"] : "";
+            $beerController->addNewBeer($name, $description, $price, $alcohol, $image);
         }
     );
 
@@ -108,7 +105,7 @@ try {
             if (isset($json["image_base64_uri"])) {
                 $image = $json["image_base64_uri"];
             }
-            $beerController->addNewBeer($id, $name, $description, $price, $alcohol, $image);
+            $beerController->putBeer($id, $name, $description, $price, $alcohol, $image);
         }
     );
 

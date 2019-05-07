@@ -301,7 +301,7 @@ class PDOBeerModelTest extends TestCase
     public function testAddNewBeer_validBeerArray_beerArray($id, $name, $description, $price, $alcohol, $image)
     {
         $beerModel = new PDOBeerModel($this->connection);
-        $actualAddedBeer = $beerModel->addNewBeer($id, $name, $description, $price, $alcohol, $image);
+        $actualAddedBeer = $beerModel->addNewBeer($name, $description, $price, $alcohol, $image);
         $allBeersBefore = $this->providerBeers();
         $allBeersAfter = $beerModel->getAllBeers();
 
