@@ -304,4 +304,27 @@ class PDOBeerModelTest extends TestCase
         $this->assertEquals(count($allBeersBefore) + 1, count($allBeersAfter));
         $this->assertEquals($actualAddedBeer, $beer);
     }
+
+    public function testPutBeer_validBeerObject_beerObject()
+    {
+        $imagePath = "test/database/img/Heineken.jpg";
+        $imageData = file_get_contents($imagePath);
+        $imageEncoded = base64_encode($imageData);
+
+        $beer = new Beer();
+        $beer->setId(3);
+        $beer->setName("Heineken");
+        $beer->setDescription("Considered a beer by the uninitiated, but connoisseurs know better...");
+        $beer->setPrice(69.66);
+        $beer->setAlcohol(0);
+        $beer->setImage($imageEncoded);
+
+        $beerModel = new PDOBeerModel($this->connection);
+        $expectedBeers = $this->providerBeers();
+        $oldBeer = $expectedBeers[2];
+        $newBeer = $beerModel->putBeer($beer);
+
+        $this->assertEquals(count($expectedBeers), 3);
+        $this->assertEquals($beer, $newBeer);
+    }
 }

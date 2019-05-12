@@ -1,5 +1,6 @@
 <?php namespace controllers;
 
+use domain\Beer;
 use models\BeerModel;
 use views\JsonBeerView;
 use views\JsonBeersView;
@@ -32,10 +33,10 @@ class BeerController
     public function getBeerById($beerId)
     {
         $statuscode = 200;
-        $beer = null;
+        $beer = new Beer();
         try {
             $beer = $this->beerModel->getBeerById($beerId);
-            if ($beer == null) {
+            if ($beer->getId() == null) {
                 $statuscode = 404;
             }
         } catch (\PDOException $exception) {
@@ -44,12 +45,11 @@ class BeerController
         $this->jsonBeerView->show(["beer" => $beer, "statuscode" => $statuscode]);
     }
 
-    public function addNewBeer($name, $description, $price = 0, $alcohol = 0, $image = "")
+    public function addNewBeer(Beer $beer)
     {
         $statuscode = 201;
-        $beer = null;
         try {
-            $beer = $this->beerModel->addNewBeer($name, $description, $price, $alcohol, $image);
+            $beer = $this->beerModel->addNewBeer($beer);
         } catch (\InvalidArgumentException $exception) {
             $statuscode = 400;
         } catch (\PDOException $exception) {
@@ -58,21 +58,19 @@ class BeerController
         $this->jsonBeerView->show(["beer" => $beer, "statuscode" => $statuscode]);
     }
 
-    public function putBeer($beerId, $name, $description, $price = 0, $alcohol = 0, $image = "")
+    public function putBeer(Beer $beer)
     {
         $statuscode = 201;
-        $beer = null;
         try {
-            if ($this->beerModel->idExists($beerId)) {
+            if ($this->beerModel->idExists($beer->getId())) {
                 $statuscode = 200;
             }
-            $beer = $this->beerModel->putBeer($beerId, $name, $description, $price, $alcohol, $image);
+            $beer = $this->beerModel->putBeer($beer);
         } catch (\InvalidArgumentException $exception) {
             $statuscode = 400;
         } catch (\PDOException $exception) {
             $statuscode = 500;
         }
         $this->jsonBeerView->show(["beer" => $beer, "statuscode" => $statuscode]);
-
     }
 }
