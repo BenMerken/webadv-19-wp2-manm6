@@ -1,5 +1,6 @@
 <?php
 
+use domain\Beer;
 use models\PDOBeerModel;
 use PHPUnit\Framework\TestCase;
 
@@ -24,12 +25,12 @@ class PDOBeerModelTest extends TestCase
 
         $beers = $this->providerBeers();
         foreach ($beers as $beer) {
-            $beerId = $beer["id"];
-            $beerName = $beer["name"];
-            $beerDescription = $beer["description"];
-            $beerPrice = $beer["price"];
-            $beerAlcohol = $beer["alcohol"];
-            $beerImage = $beer["image_base64_uri"];
+            $beerId = $beer->getId();
+            $beerName = $beer->getName();
+            $beerDescription = $beer->getDescription();
+            $beerPrice = $beer->getPrice();
+            $beerAlcohol = $beer->getAlcohol();
+            $beerImage = $beer->getImage();
             $this->connection->exec("INSERT INTO beers ( id, name, description, price, alcohol, image_base64_uri ) 
             VALUES ( $beerId ,'$beerName' , '$beerDescription' , $beerPrice , $beerAlcohol , '$beerImage' );");
         }
@@ -55,40 +56,44 @@ class PDOBeerModelTest extends TestCase
             array_push($base64EncodedImages, $image);
         }
 
-        return [
+        $beer1 = new Beer();
+        $beer1->setId(1);
+        $beer1->setName("Jupiler");
+        $beer1->setDescription("Jupiler is the best selling beer in Belgium");
+        $beer1->setPrice(3);
+        $beer1->setAlcohol(5.2);
+        $beer1->setImage($base64EncodedImages[0]);
+
+        $beer2 = new Beer();
+        $beer2->setId(2);
+        $beer2->setName("Duvel");
+        $beer2->setDescription("Duvel is a natural beer with a subtle bitterness");
+        $beer2->setPrice(4);
+        $beer2->setAlcohol(8.5);
+        $beer2->setImage($base64EncodedImages[1]);
+
+        $beer3 = new Beer();
+        $beer3->setId(3);
+        $beer3->setName("Stella Artois");
+        $beer3->setDescription("Stella Artois is a Belgian pilsner which was first brewed by Brouwerij Artois in Leuven Belgium in 1926");
+        $beer3->setPrice(2);
+        $beer3->setAlcohol(5.2);
+        $beer3->setImage($base64EncodedImages[2]);
+
+        return
             [
-                'id' => 1,
-                'name' => 'Jupiler',
-                'description' => 'Jupiler is the best selling beer in Belgium',
-                'price' => 3,
-                'alcohol' => 5.2,
-                'image_base64_uri' => $base64EncodedImages[0]
-            ],
-            [
-                'id' => 2,
-                'name' => 'Duvel',
-                'description' => 'Duvel is a natural beer with a subtle bitterness',
-                'price' => 4,
-                'alcohol' => 8.5,
-                'image_base64_uri' => $base64EncodedImages[1]
-            ],
-            [
-                'id' => 3,
-                'name' => 'Stella Artois',
-                'description' => 'Stella Artois is a Belgian pilsner which was first brewed by Brouwerij Artois in Leuven Belgium in 1926',
-                'price' => 2,
-                'alcohol' => 5.2,
-                'image_base64_uri' => $base64EncodedImages[2]
-            ],
-        ];
+                $beer1,
+                $beer2,
+                $beer3
+            ];
     }
 
     public function providerExistingIds()
     {
         return [
-            ["1"],
-            ["2"],
-            ["3"]
+            [1],
+            [2],
+            [3]
         ];
     }
 
@@ -158,24 +163,6 @@ class PDOBeerModelTest extends TestCase
     {
         return [
             ["This is a vali"]
-        ];
-    }
-
-    public function providerValidBeerArray()
-    {
-        $imagePath = "test/database/img/Heineken.jpg";
-        $imageData = file_get_contents($imagePath);
-        $imageEncoded = base64_encode($imageData);
-
-        return [
-            [
-                4,
-                "Heineken",
-                "Although deemed to be a beer by misguided individuals, true connoisseurs know better...",
-                0.1,
-                5,
-                $imageEncoded
-            ]
         ];
     }
 
@@ -265,56 +252,56 @@ class PDOBeerModelTest extends TestCase
         $beerModel = new PDOBeerModel($this->connection);
         $actualBeers = $beerModel->getAllBeers();
         $expectedBeers = $this->providerBeers();
-        $this->assertEquals('array', gettype($actualBeers));
+        $this->assertEquals("array", gettype($actualBeers));
         $this->assertEquals(count($expectedBeers), count($actualBeers));
-        foreach ($actualBeers as $actualBeer) {
-            $this->assertContains($actualBeer, $expectedBeers);
+        for ($index = 0; $index < count($actualBeers); $index++) {
+            $this->assertEquals($actualBeers[$index], $expectedBeers[$index]);
         }
     }
 
     /**
      * @dataProvider providerExistingIds
      */
-    public function testGetBeerById_existingId_arrayBeer($id)
+    public function testGetBeerById_existingId_beerObject($id)
     {
         $beerModel = new PDOBeerModel($this->connection);
         $actualBeer = $beerModel->getBeerById($id);
         $expectedBeer = $this->providerBeers()[$id - 1];
-        $this->assertEquals("array", gettype($actualBeer));
-        $this->assertEquals(count($expectedBeer), count($actualBeer));
+        $this->assertEquals("object", gettype($actualBeer));
         $this->assertEquals($expectedBeer, $actualBeer);
     }
 
     /**
      * @dataProvider providerNonExistingIds
      */
-    public function testGetBeerById_nonExistingId_emptyArray($id)
+    public function testGetBeerById_nonExistingId_emptyBeerObject($id)
     {
         $beerModel = new PDOBeerModel($this->connection);
         $actualBeer = $beerModel->getBeerById($id);
-        $this->assertEquals([], $actualBeer);
+        $this->assertEquals(new Beer(), $actualBeer);
     }
 
-    /**
-     * @dataProvider providerValidBeerArray
-     */
-    public function testAddNewBeer_validBeerArray_beerArray($id, $name, $description, $price, $alcohol, $image)
+    public function testAddNewBeer_validBeerObject_beerObject()
     {
+        $imagePath = "test/database/img/Heineken.jpg";
+        $imageData = file_get_contents($imagePath);
+        $imageEncoded = base64_encode($imageData);
+
+        $beer = new Beer();
+        $beer->setId(4);
+        $beer->setName("Heineken");
+        $beer->setDescription("Considered a beer by the uninitiated, but connoisseurs know better...");
+        $beer->setPrice(69.66);
+        $beer->setAlcohol(0);
+        $beer->setImage($imageEncoded);
+
         $beerModel = new PDOBeerModel($this->connection);
-        $actualAddedBeer = $beerModel->addNewBeer($name, $description, $price, $alcohol, $image);
+        $actualAddedBeer = $beerModel->addNewBeer($beer);
         $allBeersBefore = $this->providerBeers();
         $allBeersAfter = $beerModel->getAllBeers();
 
-        $this->assertEquals("array", gettype($actualAddedBeer));
+        $this->assertEquals("object", gettype($actualAddedBeer));
         $this->assertEquals(count($allBeersBefore) + 1, count($allBeersAfter));
-        $this->assertEquals($actualAddedBeer,
-            [
-                "id" => $id,
-                "name" => $name,
-                "description" => $description,
-                "price" => $price,
-                "alcohol" => $alcohol,
-                "image_base64_uri" => $image
-            ]);
+        $this->assertEquals($actualAddedBeer, $beer);
     }
 }

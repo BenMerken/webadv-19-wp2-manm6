@@ -32,10 +32,10 @@ class BeerController
     public function getBeerById($beerId)
     {
         $statuscode = 200;
-        $beer = [];
+        $beer = null;
         try {
             $beer = $this->beerModel->getBeerById($beerId);
-            if ($beer == []) {
+            if ($beer == null) {
                 $statuscode = 404;
             }
         } catch (\PDOException $exception) {
@@ -47,7 +47,7 @@ class BeerController
     public function addNewBeer($name, $description, $price = 0, $alcohol = 0, $image = "")
     {
         $statuscode = 201;
-        $beer = [];
+        $beer = null;
         try {
             $beer = $this->beerModel->addNewBeer($name, $description, $price, $alcohol, $image);
         } catch (\InvalidArgumentException $exception) {

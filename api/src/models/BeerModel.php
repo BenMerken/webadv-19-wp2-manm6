@@ -1,21 +1,23 @@
 <?php namespace models;
 
 
+use domain\Beer;
+
 interface BeerModel
 {
     public function getAllBeers();
 
-    public function getBeerById($beerId);
+    public function getBeerById(int $beerId);
 
-    public function addNewBeer($name, $description, $price, $alcohol, $image);
+    public function addNewBeer(Beer $beer);
 
-    public function putBeer($beerId, $name, $description, $price, $alcohol, $image);
+    public function putBeer(Beer $beer);
 
-    public function idExists($beerId);
+    public function idExists(int $beerId);
 
-    public function validateId($beerId);
+    public function validateId(int $beerId);
 
-    public function validateName($name);
+    public function validateName(string $name);
 
-    public function validateDescription($description);
+    public function validateDescription(string $description);
 }

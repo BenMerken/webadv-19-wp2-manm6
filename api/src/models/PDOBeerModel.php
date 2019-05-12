@@ -2,6 +2,8 @@
 
 namespace models;
 
+use domain\Beer;
+
 class PDOBeerModel implements BeerModel
 {
     private $pdo = null;
@@ -24,21 +26,24 @@ class PDOBeerModel implements BeerModel
 
         $beers = [];
         while ($statement->fetch(\PDO::FETCH_BOUND)) {
-            $beers[]= [
-                "id" => $beerId,
-                "name" => $name,
-                "description" => $description,
-                "price" => floatval($price),
-                "alcohol" => floatval($alcohol),
-                "image_base64_uri" => $image
-            ];
+            $beer = new Beer();
+            $beer->setId($beerId);
+            $beer->setId($beerId);
+            $beer->setName($name);
+            $beer->setDescription($description);
+            $beer->setPrice($price);
+            $beer->setAlcohol($alcohol);
+            $beer->setImage($image);
+
+            $beers[] = $beer;
         }
 
         return $beers;
     }
 
-    public function getBeerById($idExistingBeer): array
+    public function getBeerById($idExistingBeer): Beer
     {
+        $beer = new Beer();
         if ($this->idExists($idExistingBeer)) {
 
             $statement = $this->pdo->prepare("SELECT * FROM beers WHERE id=:id;");
@@ -51,31 +56,35 @@ class PDOBeerModel implements BeerModel
             $statement->bindColumn(6, $image, \PDO::PARAM_LOB);
             $statement->execute();
 
-            $beer = [];
             while ($statement->fetch(\PDO::FETCH_BOUND)) {
-                $beer = [
-                    "id" => $beerId,
-                    "name" => $name,
-                    "description" => $description,
-                    "price" => floatval($price),
-                    "alcohol" => floatval($alcohol),
-                    "image_base64_uri" => $image
-                ];
+                $beer->setId($beerId);
+                $beer->setName($name);
+                $beer->setDescription($description);
+                $beer->setPrice($price);
+                $beer->setAlcohol($alcohol);
+                $beer->setImage($image);
             }
-            return $beer;
         }
-        return [];
+
+        return $beer;
     }
 
-    public function addNewBeer($name, $description, $price, $alcohol, $image): array
+    public function addNewBeer($beer): Beer
     {
-        $this->validateName($name);
-        $this->validateDescription($description);
+        $this->validateName($beer->getName());
+        $this->validateDescription($beer->getDescription());
 
         $query = "INSERT INTO beers(
         name, description, price, alcohol, image_base64_uri) 
         VALUES(:name, :description, :price, :alcohol, :image);";
+
         $statement = $this->pdo->prepare($query);
+        $name = $beer->getName();
+        $description = $beer->getDescription();
+        $price = $beer->getPrice();
+        $alcohol = $beer->getAlcohol();
+        $image = $beer->getImage();
+
         $statement->bindParam(":name", $name, \PDO::PARAM_STR);
         $statement->bindParam(":description", $description, \PDO::PARAM_STR);
         $statement->bindParam(":price", $price, \PDO::PARAM_STR);
@@ -85,17 +94,11 @@ class PDOBeerModel implements BeerModel
 
         $beerId = intval($this->pdo->lastInsertId());
 
-        return [
-            "id" => $beerId,
-            "name" => $name,
-            "description" => $description,
-            "price" => $price,
-            "alcohol" => $alcohol,
-            "image_base64_uri" => $image
-        ];
+        $beer->setId($beerId);
+        return $beer;
     }
 
-    public function putBeer($beerId, $name, $description, $price, $alcohol, $image)
+    public function putBeer($beer)
     {
         $query = "INSERT INTO beers(
         id, name, description, price, alcohol, image_base64_uri) 
@@ -108,22 +111,15 @@ class PDOBeerModel implements BeerModel
         }
 
         $statement = $this->pdo->prepare($query);
-        $statement->bindParam(":id", $beerId, \PDO::PARAM_INT);
-        $statement->bindParam("name", $name, \PDO::PARAM_STR);
-        $statement->bindParam(":description", $description, \PDO::PARAM_STR);
-        $statement->bindParam(":price", $price, \PDO::PARAM_STR);
-        $statement->bindParam(":alcohol", $alcohol, \PDO::PARAM_INT);
-        $statement->bindParam(":image", $image, \PDO::PARAM_INT);
+        $statement->bindParam(":id", $beer->getId(), \PDO::PARAM_INT);
+        $statement->bindParam("name", $beer->getName(), \PDO::PARAM_STR);
+        $statement->bindParam(":description", $beer->getDescription(), \PDO::PARAM_STR);
+        $statement->bindParam(":price", $beer->getPrice(), \PDO::PARAM_STR);
+        $statement->bindParam(":alcohol", $beer->getAlcohol(), \PDO::PARAM_INT);
+        $statement->bindParam(":image", $beer->getImage(), \PDO::PARAM_INT);
         $statement->execute();
 
-        return [
-            "id" => $beerId,
-            "name" => $name,
-            "description" => $description,
-            "price" => $price,
-            "alcohol" => $alcohol,
-            "image_base64_url" => $image
-        ];
+        return $beer;
     }
 
     public function idExists($beerId): bool
