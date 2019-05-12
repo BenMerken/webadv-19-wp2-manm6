@@ -13,62 +13,62 @@ class Beer implements \JsonSerializable
     {
     }
 
-    public function getId(): int
+    public function getId()
     {
         return $this->id;
     }
 
-    public function setId($id): void
+    public function setId($id)
     {
         $this->id = $id;
     }
 
-    public function getName(): string
+    public function getName()
     {
         return $this->name;
     }
 
-    public function setName($name): void
+    public function setName($name)
     {
         $this->name = $name;
     }
 
-    public function getDescription(): string
+    public function getDescription()
     {
         return $this->description;
     }
 
-    public function setDescription($description): void
+    public function setDescription($description)
     {
         $this->description = $description;
     }
 
-    public function getPrice(): float
+    public function getPrice()
     {
         return $this->price;
     }
 
-    public function setPrice($price): void
+    public function setPrice($price)
     {
         $this->price = $price;
     }
 
-    public function getAlcohol(): float
+    public function getAlcohol()
     {
         return $this->alcohol;
     }
 
-    public function setAlcohol($alcohol): void
+    public function setAlcohol($alcohol)
     {
         $this->alcohol = $alcohol;
     }
 
-    public function getImage(): string
+    public function getImage()
     {
         return $this->image;
     }
 
-    public function setImage($image): void
+    public function setImage($image)
     {
         $this->image = $image;
     }

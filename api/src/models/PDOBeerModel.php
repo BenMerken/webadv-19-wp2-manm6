@@ -103,20 +103,26 @@ class PDOBeerModel implements BeerModel
         $query = "INSERT INTO beers(
         id, name, description, price, alcohol, image_base64_uri) 
         VALUES(:id, :name, :description, :price, :alcohol, :image) 
-        ON DUPLICATE KEY UPDATE id=:id, name=:name, description=:description, price=:price, alchol=:alcohol, image_base64_uri=:image;";
+        ON DUPLICATE KEY UPDATE id=:id, name=:name, description=:description, price=:price, alcohol=:alcohol, image_base64_uri=:image;";
         if ($this->pdo->getAttribute(\PDO::ATTR_DRIVER_NAME) == "sqlite") {
-            $query = "INSERT INTO beers(
-        id, name, description, price, alcohol, image_base64_uri) 
-        VALUES(:id, :name, :description, :price, :alcohol, :image);";
+            $query = "INSERT OR REPLACE INTO beers(id, name, description, price, alcohol, image_base64_uri)
+                      VALUES (:id, :name, :description, :price, :alcohol, :image);";
         }
 
         $statement = $this->pdo->prepare($query);
-        $statement->bindParam(":id", $beer->getId(), \PDO::PARAM_INT);
-        $statement->bindParam("name", $beer->getName(), \PDO::PARAM_STR);
-        $statement->bindParam(":description", $beer->getDescription(), \PDO::PARAM_STR);
-        $statement->bindParam(":price", $beer->getPrice(), \PDO::PARAM_STR);
-        $statement->bindParam(":alcohol", $beer->getAlcohol(), \PDO::PARAM_INT);
-        $statement->bindParam(":image", $beer->getImage(), \PDO::PARAM_INT);
+        $beerId = $beer->getId();
+        $name = $beer->getName();
+        $description = $beer->getDescription();
+        $price = $beer->getPrice();
+        $alcohol = $beer->getAlcohol();
+        $image = $beer->getImage();
+
+        $statement->bindParam(":id", $beerId, \PDO::PARAM_INT);
+        $statement->bindParam(":name", $name, \PDO::PARAM_STR);
+        $statement->bindParam(":description", $description, \PDO::PARAM_STR);
+        $statement->bindParam(":price", $price, \PDO::PARAM_STR);
+        $statement->bindParam(":alcohol", $alcohol, \PDO::PARAM_INT);
+        $statement->bindParam(":image", $image, \PDO::PARAM_LOB);
         $statement->execute();
 
         return $beer;

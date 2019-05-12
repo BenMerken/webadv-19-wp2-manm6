@@ -5,6 +5,7 @@ use models\PDOBeerModel;
 use views\JsonBeerView;
 use views\JsonBeersView;
 use controllers\BeerController;
+use domain\Beer;
 
 /* Firstly, read the database properties from the ../properties.json
  file, and put them in an associative array, from which you can read
@@ -74,7 +75,15 @@ try {
             $price = $jsonObject["price"];
             $alcohol = $jsonObject["alcohol"];
             $image = isset($jsonObject["image_base64_uri"]) ? $jsonObject["image_base64_uri"] : "";
-            $beerController->addNewBeer($name, $description, $price, $alcohol, $image);
+
+            $beer = new Beer();
+            $beer->setName($name);
+            $beer->setDescription($description);
+            $beer->setPrice($price);
+            $beer->setAlcohol($alcohol);
+            $beer->setImage($image);
+
+            $beerController->addNewBeer($beer);
         }
     );
 
@@ -83,13 +92,13 @@ try {
         "beers/[i:id]",
         function ($id) use ($beerController) {
             $entityBody = file_get_contents("php://input", "r");
-            $json = json_decode($entityBody);
+            $json = json_decode($entityBody, true);
 
-            $name = null;
+            $name = "";
             if (isset($json["name"])) {
                 $name = $json["name"];
             }
-            $description = null;
+            $description = "";
             if (isset($json["description"])) {
                 $description = $json["description"];
             }
@@ -101,11 +110,20 @@ try {
             if (isset($json["alcohol"])) {
                 $alcohol = $json["alcohol"];
             }
-            $image = null;
+            $image = "";
             if (isset($json["image_base64_uri"])) {
                 $image = $json["image_base64_uri"];
             }
-            $beerController->putBeer($id, $name, $description, $price, $alcohol, $image);
+
+            $beer = new Beer();
+            $beer->setId($id);
+            $beer->setName($name);
+            $beer->setDescription($description);
+            $beer->setPrice($price);
+            $beer->setAlcohol($alcohol);
+            $beer->setImage($image);
+
+            $beerController->putBeer($beer);
         }
     );
 
