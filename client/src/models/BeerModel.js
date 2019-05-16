@@ -33,7 +33,7 @@ export default class BeerModel {
         let beer = {name: name, description: description, price: price, alcohol: alcohol, image: readFile(imageFile)}
         return fetch(this.url,
             {
-                method: "post",
+                method: "POST",
                 body: JSON.stringify(beer)
             })
             .then((response) => {
@@ -84,7 +84,7 @@ export default class BeerModel {
         }
         return fetch(this.url,
             {
-                method: "post",
+                method: "PUT",
                 body: JSON.stringify(beer)
             })
             .then((response) => {

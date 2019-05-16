@@ -8,12 +8,21 @@ export default class beerController {
         this.errorView = errorView;
     }
 
-    listBeers() {
+     listBeers() {
         let promise = this.beerModel.getAllBeers();
         promise.then((beer) => {
             this.beersView.show({beers: beer});
         }).catch(error => {
             this.errorView.show({error: error.message});
+        });
+    }
+
+    listBeer(id) {
+        let promise = this.beerModel.getBeerById(id);
+        promise.then((beer) => {
+            this.beerView.show({beer: beer});
+        }).catch(error => {
+            this.errorView.show({error: error.message()});
         });
     }
 

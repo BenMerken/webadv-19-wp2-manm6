@@ -31,7 +31,7 @@ implementeren:
 Bij het aanmaken van een nieuw PDOBeerModel-object moet een PDO-object worden meegegeven. Voor de rest zijn de 
 afzonderlijke functies vrij vanzelfsprekend:
 
-- getAllBeers() neemt geen parameters en geeft een array van associatieve arrays terug, die Beer-objecten voorstellen.
+- getAllBeers() neemt geen parameters en geeft een array van Beer-objecten terug.
 De verschillende velden van deze afzonderlijke associatieve arrays kunnen via strings tussen [] worden opgevraagd;
 - getBeerById() krijgt een integer mee als id, dat in de WHERE van de SQL-query wordt meegegeven. Er wordt een
 associatieve array dat een Beer-object voorstelt teruggegeven;
@@ -50,7 +50,7 @@ Bij database-interactie wordt gebruikt gemaakt van "prepared statements" om SQL-
 
 ![alt text][img_addnewbeer]
 
-Merk op dat in de functio addNewBeer() wordt gecontroleerd dat de database provider oftewel 'sqlite' is, ofwel iets
+Merk op dat in de function addNewBeer() wordt gecontroleerd dat de database provider oftewel 'sqlite' is, ofwel iets
 anders. Dit gebeurt, omdat er een andere syntax moet gebruikt worden in de SQL-query, wanneer de provider sqlite is,
 de ON DUPLICATE KEY UPDATE... niet gebruikt kan worden.
 
@@ -117,7 +117,19 @@ Hier kan je naar navigeren in je browser:
 #### JavaScript
 #### "Wat is die bundle.js?"
 
-[VERDER AANVULLEN!!!!]
+bundle.js is een compilatie van alle JavaScript-klassen die doorheen het programma gebruikt worden.
+Daarom zetten we de verwijzing naar deze bundle.js file binnen de \<script\>-tag in 
+client/src/index.html:
+
+![alt text][img_indexhtml]
+
+Een bundle.js file kan aangemaakt worden via het commando "npm run build" met de map client/ als
+working directory. Het commando "npm run build" vanwege het scripts-object in package.json:
+
+![alt text][img_packagejson]
+
+De server kan dan gestart worden door het commando "npm run start:server", wederom vanwege scripts
+in package.json.
 
 ### Credits
 
@@ -134,3 +146,5 @@ Yusuf Destan, Peter Janssen & Ben Merken @ Hogeschool PXL,Hasselt, 2019.
 [img_phpmdpharlocation]:Images/phpmdpharlocation.PNG "phpmd.phar location in project"
 [img_phpmdcommands]: Images/phpmdcommands.PNG "PHPMD commands"
 [img_phpmdreport]:Images/phpmdreport.PNG "PHPMD report"
+[img_indexhtml]:Images/indexhtml.PNG "index.html script tag"
+[img_packagejson]: Images/packagejson.PNG "package.json"

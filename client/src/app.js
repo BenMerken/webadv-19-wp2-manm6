@@ -25,23 +25,29 @@ function handleWindowLoad() {
 
 
     //voeg hier de event handlers toe aan knoppen etc en definieer hieronder de functies
+
     let GETAllBeersButton = document.getElementById("getAllBeersButton");
     GETAllBeersButton.addEventListener("click", handleClickGetAllBeers);
     let GETBeerByIdButton = document.getElementById("getBeerByIdButton");
     GETBeerByIdButton.addEventListener("click", handleClickGetBeerById);
-    let PUTBeerButton = document.getElementById("postBeerButton");
-    PUTBeerButton.addEventListener("click", handleClickPostBeer);
+    let PUTBeerButton = document.getElementById("putBeerButton");
+    PUTBeerButton.addEventListener("click", handleClickPutBeer);
     let POSTBeerButton = document.getElementById("postBeerButton");
     POSTBeerButton.addEventListener("click", handleClickPostBeer);
 
 }
 
 //deze functies kunnen gebruikt worden
-function handleClickGetAllPersons() {
+function handleClickGetAllBeers() {
     beerController.listBeers();
 }
 
-function handleClickAddBeer() {
+function handleClickGetBeerById() {
+    let id = document.getElementById("getBeerId").value;
+    beerController.listBeer(id);
+}
+
+function handleClickPostBeer() {
     let name = document.getElementById("name").value;
     let description = document.getElementById("description").value;
     let price = document.getElementById("price").value;
@@ -50,8 +56,8 @@ function handleClickAddBeer() {
     beerController.addNewBeer(name, description, price, alcohol, image);
 }
 
-function handleClickPUTBeer() {
-    let id = document.getElementById("txtid").value;
+function handleClickPutBeer() {
+    let id = document.getElementById("id").value;
     let name = document.getElementById("name").value;
     let description = document.getElementById("description").value;
     let price = document.getElementById("price").value;
