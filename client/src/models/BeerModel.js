@@ -26,13 +26,16 @@ export default class BeerModel {
                 return response.json();
             });
     }
-    addNewBeer(name, description,price, alcohol, imageFile){
-        validate(name, description,price, alcohol);
 
-        let beer = {name:name, description:description , price :price, alcohol:alcohol, image:readFile(imageFile)}
+    addNewBeer(name, description, price, alcohol, imageFile) {
+        validate(name, description, price, alcohol);
+
+        let beer = {name: name, description: description, price: price, alcohol: alcohol, image: readFile(imageFile)}
         return fetch(this.url,
-            {method: "post",
-                body : JSON.stringify(beer) } )
+            {
+                method: "post",
+                body: JSON.stringify(beer)
+            })
             .then((response) => {
                 if (response.status !== 200) {
                     throw new Error("Something went wrong: " + response.status);
@@ -69,12 +72,21 @@ export default class BeerModel {
             then(response => console.log('Success:'))
             .catch(error => console.error('Error:', error));
     }*/
-    putBeer(beerId,name, description,price, alcohol, imageFile){
-        validate(name, description,price, alcohol);
-        let beer = {id:beerId,name:name, description:description , price :price, alcohol:alcohol, image:readFile(imageFile)}
+    putBeer(beerId, name, description, price, alcohol, imageFile) {
+        validate(name, description, price, alcohol);
+        let beer = {
+            id: beerId,
+            name: name,
+            description: description,
+            price: price,
+            alcohol: alcohol,
+            image: readFile(imageFile)
+        }
         return fetch(this.url,
-            {method: "post",
-                body : JSON.stringify(beer) } )
+            {
+                method: "post",
+                body: JSON.stringify(beer)
+            })
             .then((response) => {
                 if (response.status !== 200) {
                     throw new Error("Something went wrong: " + response.status);
@@ -85,16 +97,19 @@ export default class BeerModel {
             .catch(error => console.error('Error:', error));
     }
 }
+
 //dit zou de image moeten omzetten naar base64
 function readFile(imageFile) {
-        let FR= new FileReader();
-        return  FR.readAsDataURL( this.files[0] );
+    let FR = new FileReader();
+    return FR.readAsDataURL(this.files[0]);
 
 }
-function validate(name, description, price,alcohol ){
+
+function validate(name, description, price, alcohol) {
     if (!(typeof name == 'string' && name.length >= 5)) {
         return Promise.reject(new Error("name moet een string met minstens 5 karakters zijn"));
-    }if (!(typeof description == 'string' && description.length >= 5)) {
+    }
+    if (!(typeof description == 'string' && description.length >= 5)) {
         return Promise.reject(new Error("description moet een string met minstens 5 karakters zijn"));
     }
 

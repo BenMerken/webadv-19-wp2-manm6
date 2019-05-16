@@ -1,10 +1,10 @@
 "use strict";
 
-import BeerController from './controller/BeerController';
-import BeerModel from './model/BeerModel';
-import ErrorView from './view/ErrorView';
-import BeerView from './view/BeerView';
-import BeersView from './view/BeersView';
+import BeerController from './controllers/BeerController';
+import BeerModel from './models/BeerModel';
+import ErrorView from './views/ErrorView';
+import BeerView from './views/BeerView';
+import BeersView from './views/BeersView';
 
 let url = 'localhost:60/api/beers/';
 
@@ -24,13 +24,21 @@ function handleWindowLoad() {
     beerController = new BeerController(beerModel, beerView, beersView, errorView);
 
 
-    //voeg hier de event handlers toe aan knoppen etc en defineer hieronder de functies
+    //voeg hier de event handlers toe aan knoppen etc en definieer hieronder de functies
+    let GETAllBeersButton = document.getElementById("getAllBeersButton");
+    GETAllBeersButton.addEventListener("click", handleClickGetAllBeers);
+    let GETBeerByIdButton = document.getElementById("getBeerByIdButton");
+    GETBeerByIdButton.addEventListener("click", handleClickGetBeerById);
+    let PUTBeerButton = document.getElementById("postBeerButton");
+    PUTBeerButton.addEventListener("click", handleClickPostBeer);
+    let POSTBeerButton = document.getElementById("postBeerButton");
+    POSTBeerButton.addEventListener("click", handleClickPostBeer);
 
 }
 
 //deze functies kunnen gebruikt worden
 function handleClickGetAllPersons() {
-    beerController.listPersons();
+    beerController.listBeers();
 }
 
 function handleClickAddBeer() {
@@ -39,7 +47,7 @@ function handleClickAddBeer() {
     let price = document.getElementById("price").value;
     let alcohol = document.getElementById("alcohol").value;
     let image = document.getElementById("imageFile").files[0];
-    beerController.addNewBeer(name,description,price,alcohol,image);
+    beerController.addNewBeer(name, description, price, alcohol, image);
 }
 
 function handleClickPUTBeer() {
@@ -49,5 +57,5 @@ function handleClickPUTBeer() {
     let price = document.getElementById("price").value;
     let alcohol = document.getElementById("alcohol").value;
     let image = document.getElementById("imageFile").files[0];
-    beerController.putBeer(id,name,description,price,alcohol, image);
+    beerController.putBeer(id, name, description, price, alcohol, image);
 }

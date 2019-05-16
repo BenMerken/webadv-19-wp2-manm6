@@ -84,7 +84,7 @@ fabric.properties
 # End of https://www.gitignore.io/api/phpstorm
 
 
-/node_modules
+client/node_modules
 /public/hot
 /public/storage
 /storage/*.key

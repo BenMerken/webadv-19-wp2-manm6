@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Web Advanced - PE2 - JavaScript Fetch API</title>
+</head>
+<body>
+<h1>Web Advanced - PE2 - JavaScript Fetch API</h1>
+<div id="controls">
+    <div id="getAllBeers">
+        <button id="getAllBeersButton">GET all beers</button>
+    </div>
+    <div id="getBeetById">
+        <button id="getBeerByIdButton">GET beer for ID:</button>
+        <input type="number" id="beerId">
+    </div>
+    <div id="addBeer">
+        <form>
+            <label for="id">ID:</label>
+            <input type="text" id="id"/>
+            <label for="name">Name:</label>
+            <input type="text" id="name"/>
+            <label for="description">Description:</label>
+            <input type="text" id="description">
+            <label for="price">Price:</label>
+            <input type="number" id="price">
+            <label for="alcohol">Alchol percentage:</label>
+            <input type="number" id="alcohol">
+            <div>
+                <button id="postBeerButton">POST beer</button>
+                <button id="putBeerButton">PUT beer</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript" src="public/js/bundle.js" charset="UTF-8"></script>
+</body>
+</html>
