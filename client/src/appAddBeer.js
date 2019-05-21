@@ -26,16 +26,27 @@ function handleWindowLoad() {
     beersAndIdsView = new BeersAndIdsView();
     beerController = new BeerController(beerModel, beerView, beersView, errorView,beersAndIdsView);
 
+    let PostBeerByButton = document.getElementById("PostBeerButton");
+    PostBeerByButton.addEventListener("click", handleClickPostBeer);
 
-    //voeg hier de event handlers toe aan knoppen etc en definieer hieronder de functies
+    alert(url);
+    function handleClickPostBeer() {
+        let form =document.getElementById("BeerInformationForm");
+        let name = form.querySelector("input[name='name']").value;
+
+        let description = form.querySelector("input[name='description']").value;
+
+        let price =  form.querySelector("input[name='price']").value;
+        price=price.replace(",", ".");
+
+        let alcohol = form.querySelector("input[name='alcohol']").value.replace(",", ".");
+
+        let image = form.querySelector("input[name='imageFile']").files[0];
 
 
-    beerController.listBeers();
-
+        beerController.addBeer(name,description,price,alcohol,image);
+    }
 }
-
-
-
 
 
 

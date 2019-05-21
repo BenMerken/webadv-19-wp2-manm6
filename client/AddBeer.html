@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="public/js/add-bundle.js"></script>
+</head>
+<body>
+<header class="header-banner-top">
+    <h1> taak Web2</h1>
+    <div class="main-navigation">
+
+        <nav class="horizontal-nav primary-wrapper" role='navigation'>
+            <ul>
+                <li class="active-link"><a href="index.html" >Home</a></li>
+                <li><a href="BeerDetail.html">Detail/Put beer</a></li>
+                <li><a href="AddBeer.html">Add new beer</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+<h2>Add A new Beer</h2>
+<form id="BeerInformationForm">
+    <div class="bind">
+        <label>naam</label>
+        <input  name="name" id="nameText" type="text">
+    </div>
+    <div class="bind">
+        <label>description</label>
+        <input name="description" id="descriptionText" type="text">
+    </div>
+    <div class="bind">
+        <label>price</label>
+        <input name="price" id="priceNumber" type="number" >
+    </div>
+    <div class="bind">
+        <label>alcohol</label>
+        <input name="alcohol" id="alcoholNumber" type="number" >
+    </div>
+    <div class="bind">
+        <img id="imageSource"/>
+    </div>
+    <div>
+        <input type="file"  name="imageFile">
+    </div>
+</form>
+<button id="PostBeerButton">Voeg Toe</button>
+<div id="output"></div>
+</body>
+</html>

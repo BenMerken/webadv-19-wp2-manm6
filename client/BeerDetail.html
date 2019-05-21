@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="public/js/detail-bundle.js"></script>
+    <script src="public/js/polyfill-bundle.js"></script>
+</head>
+<body>
+<div id="getBeerById">
+    <select id="selectIds">
+    </select>
+    <button id="getBeerByIdButton">GET Detail</button>
+    <button id="putBeerButton">Change Beer</button>
+</div>
+<form id="BeerInformationForm">
+    <div class="bind">
+        <label>naam</label>
+        <input  name="name" id="nameText" type="text">
+    </div>
+    <div class="bind">
+        <label>description</label>
+        <input name="description" id="descriptionText" type="text">
+    </div>
+    <div class="bind">
+        <label>price</label>
+        <input name="price" id="priceNumber" type="number">
+    </div>
+    <div class="bind">
+        <label>alcohol</label>
+        <input name="alcohol" id="alcoholNumber" type="number">
+    </div>
+    <div class="bind">
+        <img id="imageSource"/>
+    </div>
+    <div>
+<input type="file" id="imageFile">
+    </div>
+</form>
+
+
+</body>
+</html>

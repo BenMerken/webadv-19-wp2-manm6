@@ -76,7 +76,7 @@ class PDOBeerModel implements BeerModel
 
         $query = "INSERT INTO beers(
         name, description, price, alcohol, image_base64_uri) 
-        VALUES(:name, :description, :price, :alcohol, :image);";
+        VALUES(:name, :description, :price, :alcohol, :image)";
 
         $statement = $this->pdo->prepare($query);
         $name = $beer->getName();

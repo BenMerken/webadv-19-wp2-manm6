@@ -7,16 +7,25 @@ export default class BeersView extends View {
         let output = document.createElement("maindiv");
 
         for (let beer of data.beers) {
-            // output = output + `${person.id} ${person.name}\n`;
             let div = document.createElement("div");
+
             let titleBar = document.createElement("h2");
-            titleBar.innerHTML = beer.title;
+            titleBar.innerText = beer.name;
             div.appendChild(titleBar);
 
+            let figure = document.createElement("figure");
             let img = document.createElement("img");
             let src = "data:".concat("image/png", ";base64,", beer.image);
             img.setAttribute("src", src);
-            div.appendChild(img);
+
+            let aTag=document.createElement("a");
+            aTag.setAttribute("href","BeerDetail.html?id="+beer.id);
+            aTag.innerText="detail";
+
+            figure.appendChild(img);
+            figure.appendChild(aTag);
+
+            div.appendChild(figure);
 
             output.appendChild(div);
         }
