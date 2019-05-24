@@ -2,7 +2,7 @@
 
 class Beer implements \JsonSerializable
 {
-    private $id;
+    private $beerId;
     private $name;
     private $description;
     private $price;
@@ -15,12 +15,12 @@ class Beer implements \JsonSerializable
 
     public function getId()
     {
-        return $this->id;
+        return $this->beerId;
     }
 
-    public function setId($id)
+    public function setId($beerId)
     {
-        $this->id = $id;
+        $this->beerId = $beerId;
     }
 
     public function getName()

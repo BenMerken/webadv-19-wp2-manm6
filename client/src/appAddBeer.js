@@ -24,27 +24,24 @@ function handleWindowLoad() {
     errorView = new ErrorView();
     beerModel = new BeerModel(url);
     beersAndIdsView = new BeersAndIdsView();
-    beerController = new BeerController(beerModel, beerView, beersView, errorView,beersAndIdsView);
+    beerController = new BeerController(beerModel, beerView, beersView, errorView, beersAndIdsView);
 
     let PostBeerByButton = document.getElementById("PostBeerButton");
     PostBeerByButton.addEventListener("click", handleClickPostBeer);
 
-    alert(url);
+    let apiInfoAlert = document.getElementById("apiInfo");
+    apiInfoAlert.innerHTML += "Current API is " + url;
+
     function handleClickPostBeer() {
-        let form =document.getElementById("BeerInformationForm");
+        let form = document.getElementById("BeerInformationForm");
         let name = form.querySelector("input[name='name']").value;
-
         let description = form.querySelector("input[name='description']").value;
-
-        let price =  form.querySelector("input[name='price']").value;
-        price=price.replace(",", ".");
-
+        let price = form.querySelector("input[name='price']").value;
+        price = price.replace(",", ".");
         let alcohol = form.querySelector("input[name='alcohol']").value.replace(",", ".");
-
         let image = form.querySelector("input[name='imageFile']").files[0];
 
-
-        beerController.addBeer(name,description,price,alcohol,image);
+        beerController.addBeer(name, description, price, alcohol, image);
     }
 }
 

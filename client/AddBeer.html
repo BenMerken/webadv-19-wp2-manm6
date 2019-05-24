@@ -31,9 +31,10 @@
         </nav>
     </div>
 </header>
-
 <h2>Add a new beer</h2>
-
+<div class="alert alert-info" id="apiInfo">
+    <strong>Info:</strong>
+</div>
 <form id="BeerInformationForm">
     <div class="form-group">
         <div class="bind">
@@ -59,8 +60,8 @@
         <div class="bind">
             <img id="imageSource"/>
         </div>
-        <div>
-            <input class="form-control" type="file" name="imageFile">
+        <div class="form-group">
+            <input class="form-control-file" type="file" name="imageFile">
         </div>
         <button id="PostBeerButton">Voeg Toe</button>
     </div>
