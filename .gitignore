@@ -99,4 +99,4 @@ yarn-error.log
 .env
 .phpunit.result.cache
 api/properties.json
-
+client/src/serverUrl.json
