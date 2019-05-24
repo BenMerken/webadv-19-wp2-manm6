@@ -8,7 +8,6 @@ import BeersView from './views/BeersView';
 import BeersAndIdsView from "./views/BeersAndIdsView";
 
 let url = require('./serverUrl').url;
-
 let beerView;
 let beersView;
 let errorView;
@@ -26,12 +25,9 @@ function handleWindowLoad() {
     beersAndIdsView = new BeersAndIdsView();
     beerController = new BeerController(beerModel, beerView, beersView, errorView,beersAndIdsView);
 
-
     //voeg hier de event handlers toe aan knoppen etc en definieer hieronder de functies
 
-
     beerController.listBeers();
-
 }
 
 

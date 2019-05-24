@@ -128,8 +128,14 @@ working directory. Het commando "npm run build" vanwege het scripts-object in pa
 
 ![alt text][img_packagejson]
 
-De server kan dan gestart worden door het commando "npm run start:server", wederom vanwege scripts
-in package.json.
+Op een development server kan dan het commando "npm run start:server" uitgevoerd worden om een
+instantie van de webpack server te draaien op poort 8080, die je bundle files automatisch up to
+date houdt bij wijzigingen.
+
+Hoe de bundle.js files aangemaakt dienen te worden, dient gespecifieerd te worden in de file
+webpack.config.js:
+
+![alt text][img_webpackconfigjs]
 
 ### Credits
 
@@ -148,3 +154,4 @@ Yusuf Destan, Peter Janssen & Ben Merken @ Hogeschool PXL,Hasselt, 2019.
 [img_phpmdreport]:Images/phpmdreport.PNG "PHPMD report"
 [img_indexhtml]:Images/indexhtml.PNG "index.html script tag"
 [img_packagejson]: Images/packagejson.PNG "package.json"
+[img_webpackconfigjs]:Images/webpackconfigjs.PNG "webpack.config.js"

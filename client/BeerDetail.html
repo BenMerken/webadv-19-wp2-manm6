@@ -25,7 +25,7 @@
             <a class="navbar-brand" href="index.html">Home</a>
             <div class="collapse navbar-collapse">
                 <ul class="navbar-nav mr-auto">
-                    <li class="nav-item"><a class="nav-link" href="BeerDetail.html">Detail/Put beer</a></li>
+                    <li class="nav-item"><a class="nav-link" href="BeerDetail.html">Detail/change beer</a></li>
                     <li class="nav-item"><a class="nav-link" href="AddBeer.html">Add new beer</a></li>
                 </ul>
             </div>
@@ -37,30 +37,30 @@
 <div id="getBeerById">
     <select id="selectIds">
     </select>
-    <button id="getBeerByIdButton">GET details</button>
-    <button id="putBeerButton">Change beer</button>
+    <button id="getBeerByIdButton">Get beer details</button>
+    <button id="putBeerButton">Change beer's details</button>
 </div>
 <form id="BeerInformationForm">
     <div class="form-group">
         <div class="bind">
-            <label for="nameText">Naam:</label>
+            <label for="nameText">Name:</label>
             <input class="form-control" name="name" id="nameText" type="text">
-            <small id="nameHelp" class="form-text text-muted">Geef hier de naam van het bier.</small>
+            <small id="nameHelp" class="form-text text-muted">Enter the beer's name.</small>
         </div>
         <div class="bind">
-            <label for="descriptionText">Beschrijving:</label>
+            <label for="descriptionText">Description:</label>
             <input class="form-control" name="description" id="descriptionText" type="text">
-            <small id="descriptionHelp" class="form-text text-muted">Geef hier de beschrjving van het bier.</small>
+            <small id="descriptionHelp" class="form-text text-muted">Enter the beer's description.</small>
         </div>
         <div class="bind">
-            <label for="priceNumber">Prijs:</label>
+            <label for="priceNumber">Price:</label>
             <input class="form-control" name="price" id="priceNumber" type="number">
-            <small id="priceHelp">Geef hier de prijs van het bier (valutateken niet toegelaten).</small>
+            <small id="priceHelp">Enter the beer's price (currency symbols are not allowed).</small>
         </div>
         <div class="bind">
-            <label for="alcoholNumber">Alcoholpercentage:</label>
+            <label for="alcoholNumber">Alcohol percentage:</label>
             <input class="form-control" name="alcohol" id="alcoholNumber" type="number">
-            <small id="alcoholHelp" class="form-text text-muted">Geef hier het alcoholpercentage van het bier.</small>
+            <small id="alcoholHelp" class="form-text text-muted">Enter the beer's alcohol percentage.</small>
         </div>
         <div class="bind">
             <img id="imageSource"/>
