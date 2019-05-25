@@ -3,7 +3,6 @@ import View from './View';
 
 export default class BeersView extends View {
     show(data) {
-        let numberOfBeers = data.beers.length;
         let output = document.createElement("maindiv");
 
         for (let beer of data.beers) {
@@ -18,9 +17,9 @@ export default class BeersView extends View {
             let src = "data:".concat("image/png", ";base64,", beer.image);
             img.setAttribute("src", src);
 
-            let aTag=document.createElement("a");
-            aTag.setAttribute("href","BeerDetail.html?id="+beer.id);
-            aTag.innerText="detail";
+            let aTag = document.createElement("a");
+            aTag.setAttribute("href", "BeerDetail.html?id=" + beer.beerId);
+            aTag.innerText = "detail";
 
             figure.appendChild(img);
             figure.appendChild(aTag);

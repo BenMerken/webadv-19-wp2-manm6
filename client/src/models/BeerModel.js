@@ -5,8 +5,8 @@ export default class BeerModel {
         this.url = url;
     }
 
-     getAllBeers() {
-        let response =  fetch(this.url, {method: "GET"})
+    getAllBeers() {
+        let response = fetch(this.url, {method: "GET"})
             .then((response) => {
                 if (response.status !== 200) {
                     throw new Error("Something went wrong: " + response.status);
@@ -16,8 +16,9 @@ export default class BeerModel {
             });
         return response;
     }
+
     getAllBeersPagination(index) {
-        let response =  fetch(this.url, {method: "GET"})
+        let response = fetch(this.url, {method: "GET"})
             .then((response) => {
                 if (response.status !== 200) {
                     throw new Error("Something went wrong: " + response.status);
@@ -25,12 +26,12 @@ export default class BeerModel {
 
                 return response.json();
             });
-        return response.slice(index,index+3);
+        return response.slice(index, index + 3);
     }
 
 
     getBeerById(id) {
-        return fetch(this.url+"/"+id, {method: "GET"})
+        return fetch(this.url + "/" + id, {method: "GET"})
             .then((response) => {
                 if (response.status !== 200) {
                     throw new Error("Something went wrong: " + response.status);
@@ -41,8 +42,7 @@ export default class BeerModel {
     }
 
 
-
-    addNewBeer(name, description,price, alcohol, imageFile){
+    addNewBeer(name, description, price, alcohol, imageFile) {
         let formData = new FormData();
         formData.append('name', name);
         formData.append('description', description);
@@ -50,10 +50,12 @@ export default class BeerModel {
         formData.append('alcohol', alcohol);
         formData.append('image', imageFile);
         return fetch(this.url,
-            {method: "POST",
-                body :formData } )
+            {
+                method: "POST",
+                body: formData
+            })
             .then((response) => {
-               if (response.status !== 201 ) {
+                if (response.status !== 201) {
                     throw new Error("Something went wrong: " + response.status);
                 }
 
@@ -71,9 +73,11 @@ export default class BeerModel {
         formData.append('price', price);
         formData.append('alcohol', alcohol);
         formData.append('image', imageFile);
-        return fetch(this.url+"/"+beerId,
-            {method: "put",
-                body :formData } )
+        return fetch(this.url + "/" + beerId,
+            {
+                method: "put",
+                body: formData
+            })
             .then((response) => {
                 if (response.status !== 200) {
                     throw new Error("Something went wrong: " + response.status);
@@ -81,10 +85,11 @@ export default class BeerModel {
 
                 return response.json();
             })
-            .then(response => alert('Successvol gewijzigd ' ))
+            .then(response => alert('Successvol gewijzigd '))
             .catch(error => console.error('Error:', error));
     }
 }
+
 function validate(name, description, price, alcohol) {
     if (!(typeof name == 'string' && name.length >= 4)) {
         return Promise.reject(new Error("name moet een string met minstens 5 karakters zijn"));

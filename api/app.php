@@ -57,7 +57,7 @@ try {
         }
     );
 
-    $router->map(
+    /*$router->map(
         "POST",
         "beers",
         function () use ($beerController) {
@@ -107,7 +107,7 @@ try {
             $beerController->putBeer($beer);
         }
     );
-
+*/
 
 
     $match = $router->match();
@@ -122,7 +122,7 @@ try {
 } catch (Exception $exception) {
     http_response_code(500);
 }
-/*  $router->map(
+  $router->map(
         "POST",
         "beers",
         function () use ($beerController) {
@@ -151,8 +151,8 @@ try {
             $beerController->addNewBeer($beer);
         }
     );
-*/
-/* $router->map(
+
+ $router->map(
         "PUT",
         "beers/[i:id]",
         function ($id) use ($beerController) {
@@ -190,4 +190,4 @@ try {
 
             $beerController->putBeer($beer);
         }
-    );*/
+    );

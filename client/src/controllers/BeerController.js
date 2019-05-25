@@ -11,8 +11,8 @@ export default class beerController {
 
     listBeers() {
         let promise = this.beerModel.getAllBeers();
-        promise.then((beer) => {
-            this.beersView.show({beers: beer});
+        promise.then((beers) => {
+            this.beersView.show({beers: beers});
         }).catch(error => {
             this.errorView.show({error: error.message});
         });
