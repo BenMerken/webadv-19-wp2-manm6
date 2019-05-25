@@ -30,8 +30,8 @@ function handleWindowLoad() {
 
     beerController.listBeersAndIds("selectIds");
 
-    let GETBeerByIdButton = document.getElementById("getBeerByIdButton");
-    GETBeerByIdButton.addEventListener("click", handleClickGetBeerById);
+    let beerIdSelect = document.getElementById("selectIds");
+    beerIdSelect.addEventListener("change", handleChangeSelectIds);
 
     let PUTBeerButton = document.getElementById("putBeerButton");
     PUTBeerButton.addEventListener("click", handleClickPutBeer);
@@ -39,22 +39,15 @@ function handleWindowLoad() {
     const urlParams = new URLSearchParams(window.location.search);
 
     let id = urlParams.get('id');
-    let select = document.getElementById("selectIds");
     let form = document.getElementById("BeerInformationForm");
     if (id !== null) {
-        for (let i = 0; i < select.length; i++) {
-            if (select[i] == id) {
-                select.selectedIndex = i;
+        for (let i = 0; i < beerIdSelect.length; i++) {
+            if (beerIdSelect[i] == id) {
+                beerIdSelect.selectedIndex = i;
                 break;
             }
         }
         beerController.listBeer(id, form)
-    }
-
-    function handleClickGetBeerById() {
-        let id = select.value;
-        let form = document.getElementById("BeerInformationForm");
-        beerController.listBeer(id, form);
     }
 
     function handleClickPutBeer() {
@@ -66,6 +59,12 @@ function handleWindowLoad() {
         let alcohol = document.getElementById("alcoholNumber").value;
         let image = document.getElementById("imageFile").files[0];
         beerController.putBeer(id, name, description, price, alcohol, image, form);
+    }
+
+    function handleChangeSelectIds() {
+        let id = beerIdSelect.value;
+        let form = document.getElementById("BeerInformationForm");
+        beerController.listBeer(id, form);
     }
 }
 
