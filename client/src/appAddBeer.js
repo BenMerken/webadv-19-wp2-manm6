@@ -31,8 +31,8 @@ function handleWindowLoad() {
     let PostBeerByButton = document.getElementById("PostBeerButton");
     PostBeerByButton.addEventListener("click", handleClickPostBeer);
 
-    let fileInput = document.getElementById("fileInput");
-    fileInput.addEventListener("change", previewFile);
+    let filePicker = document.getElementById("filePicker");
+    filePicker.addEventListener("change", handleFilePickerChange);
 
     let apiInfoAlert = document.getElementById("apiInfo");
     apiInfoAlert.innerHTML += "Current API is " + url;
@@ -48,7 +48,7 @@ function handleWindowLoad() {
         beerController.addBeer(name, description, price, alcohol, image);
     }
 
-    function previewFile() {
+    function handleFilePickerChange() {
         let preview = document.querySelector('img');
         let file = document.querySelector('input[type=file]').files[0];
         let reader = new FileReader();

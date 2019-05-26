@@ -25,8 +25,13 @@ function handleWindowLoad() {
     beersAndIdsView = new BeersAndIdsView();
     beerController = new BeerController(beerModel, beerView, beersView, errorView, beersAndIdsView);
 
+    let image = "";
+    let beerId = -1;
 
     //voeg hier de event handlers toe aan knoppen etc en definieer hieronder de functies
+
+    let imageSource = document.getElementById("imageSource");
+    imageSource.addEventListener("load", handleInitialImageChange);
 
     beerController.listBeersAndIds("selectIds");
 
@@ -35,6 +40,9 @@ function handleWindowLoad() {
 
     let PUTBeerButton = document.getElementById("putBeerButton");
     PUTBeerButton.addEventListener("click", handleClickPutBeer);
+
+    let filePicker = document.getElementById("filePicker");
+    filePicker.addEventListener("change", handleFilePickerChange);
 
     const urlParams = new URLSearchParams(window.location.search);
 
@@ -47,24 +55,43 @@ function handleWindowLoad() {
                 break;
             }
         }
+        beerId = parseInt(id);
         beerController.listBeer(id, form)
     }
 
     function handleClickPutBeer() {
         let form = document.getElementById("BeerInformationForm");
-        let id = document.getElementById("selectIds").value;
         let name = document.getElementById("nameText").value;
         let description = document.getElementById("descriptionText").value;
         let price = document.getElementById("priceNumber").value;
         let alcohol = document.getElementById("alcoholNumber").value;
-        let image = document.getElementById("imageFile").files[0];
-        beerController.putBeer(id, name, description, price, alcohol, image, form);
+        image = image.replace(/^data:.*\/.*;base64,/, "");
+
+        beerController.putBeer(beerId, name, description, price, alcohol, image, form);
     }
 
     function handleChangeSelectIds() {
-        let id = beerIdSelect.value;
+        beerId = beerIdSelect.value;
         let form = document.getElementById("BeerInformationForm");
-        beerController.listBeer(id, form);
+        beerController.listBeer(beerId, form);
+    }
+
+    function handleInitialImageChange() {
+        image = document.getElementById("imageSource").src;
+    }
+
+    function handleFilePickerChange() {
+        let preview = document.querySelector('img');
+        let file = document.querySelector('input[type=file]').files[0];
+        let reader = new FileReader();
+
+        reader.addEventListener("load", function () {
+            preview.src = reader.result;
+        }, false);
+
+        if (file) {
+            reader.readAsDataURL(file);
+        }
     }
 }
 

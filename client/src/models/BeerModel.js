@@ -43,6 +43,7 @@ export default class BeerModel {
 
 
     addNewBeer(name, description, price, alcohol, imageFile) {
+        validate(name, description, price, alcohol);
         let beer = {};
         beer.name = name;
         beer.description = description;
@@ -68,16 +69,17 @@ export default class BeerModel {
 
     putBeer(beerId, name, description, price, alcohol, imageFile) {
         validate(name, description, price, alcohol);
-        let formData = new FormData();
-        formData.append('name', name);
-        formData.append('description', description);
-        formData.append('price', price);
-        formData.append('alcohol', alcohol);
-        formData.append('image', imageFile);
+        let beer = {};
+        beer.id = beerId;
+        beer.name = name;
+        beer.description = description;
+        beer.price = price;
+        beer.alcohol = alcohol;
+        beer.image = imageFile;
         return fetch(this.url + "/" + beerId,
             {
-                method: "put",
-                body: formData
+                method: "PUT",
+                body: JSON.stringify(beer)
             })
             .then((response) => {
                 if (response.status !== 200) {
