@@ -26,7 +26,7 @@ export default class PersonView extends View {
         let beer= data.beer;
         let maindiv = document.createElement("div");
         let ptag = document.createElement("p");
-        ptag.innerText="de bier genaamd "+beer +"is met success toegevoegd";
+        ptag.innerText="Het bier genaamd "+beer +"is met success toegevoegd";
         maindiv.appendChild(ptag);
         super.show(maindiv);
     }

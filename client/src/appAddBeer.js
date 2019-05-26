@@ -26,22 +26,41 @@ function handleWindowLoad() {
     beersAndIdsView = new BeersAndIdsView();
     beerController = new BeerController(beerModel, beerView, beersView, errorView, beersAndIdsView);
 
+    let image = "";
+
     let PostBeerByButton = document.getElementById("PostBeerButton");
     PostBeerByButton.addEventListener("click", handleClickPostBeer);
+
+    let fileInput = document.getElementById("fileInput");
+    fileInput.addEventListener("change", previewFile);
 
     let apiInfoAlert = document.getElementById("apiInfo");
     apiInfoAlert.innerHTML += "Current API is " + url;
 
     function handleClickPostBeer() {
-        let form = document.getElementById("BeerInformationForm");
-        let name = form.querySelector("input[name='name']").value;
-        let description = form.querySelector("input[name='description']").value;
-        let price = form.querySelector("input[name='price']").value;
-        price = price.replace(",", ".");
-        let alcohol = form.querySelector("input[name='alcohol']").value.replace(",", ".");
-        let image = form.querySelector("input[name='imageFile']").files[0];
+
+        let name = document.getElementById("nameText").value;
+        let description = document.getElementById("descriptionText").value;
+        let price = document.getElementById("priceNumber").value.replace(",", ".");
+        let alcohol = document.getElementById("alcoholNumber").value.replace(",", ".");
+        image = image.replace(/^data:.*\/.*;base64,/, "");
 
         beerController.addBeer(name, description, price, alcohol, image);
+    }
+
+    function previewFile() {
+        let preview = document.querySelector('img');
+        let file = document.querySelector('input[type=file]').files[0];
+        let reader = new FileReader();
+
+        reader.addEventListener("load", function () {
+            preview.src = reader.result;
+            image = reader.result;
+        }, false);
+
+        if (file) {
+            reader.readAsDataURL(file);
+        }
     }
 }
 

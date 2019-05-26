@@ -57,72 +57,7 @@ try {
         }
     );
 
-    /*$router->map(
-        "POST",
-        "beers",
-        function () use ($beerController) {
-            header("Access-Control-Allow-Origin: *");
-
-            $name = $_POST["name"];
-            $description = $_POST["description"];
-            $price = $_POST["price"];
-            $alcohol = $_POST["alcohol"];
-            $image =base64_encode(file_get_contents( $_FILES["image"]["tmp_name"]));
-
-            $beer = new Beer();
-            $beer->setName($name);
-            $beer->setDescription($description);
-            $beer->setPrice($price);
-            $beer->setAlcohol($alcohol);
-            $beer->setImage($image);
-
-            $beerController->addNewBeer($beer);
-        }
-    );
     $router->map(
-        "PUT",
-        "beers/[i:id]",
-        function ($id) use ($beerController) {
-            header("Access-Control-Allow-Origin: *");
-
-
-            $name = $_POST["name"];
-            $description = $_POST["description"];
-            $price =$_POST["price"];
-            $alcohol =$_POST["alcohol"];
-            if(isset($_FILES["image"])){
-                $image = base64_encode( file_get_contents( $_FILES["image"]["tmp_name"]));
-            }
-
-
-
-            $beer = new Beer();
-            $beer->setId($id);
-            $beer->setName($name);
-            $beer->setDescription($description);
-            $beer->setPrice($price);
-            $beer->setAlcohol($alcohol);
-            $beer->setImage($image);
-
-            $beerController->putBeer($beer);
-        }
-    );
-*/
-
-
-    $match = $router->match();
-    if ($match && is_callable($match["target"])) {
-        call_user_func_array($match["target"], $match["params"]);
-    } else {
-        http_response_code(400);
-    }
-} catch (InvalidArgumentException $exception) {
-    http_response_code(400);
-
-} catch (Exception $exception) {
-    http_response_code(500);
-}
-  $router->map(
         "POST",
         "beers",
         function () use ($beerController) {
@@ -139,7 +74,7 @@ try {
             $description = $jsonObject["description"];
             $price = $jsonObject["price"];
             $alcohol = $jsonObject["alcohol"];
-            $image = isset($jsonObject["image_base64_uri"]) ? $jsonObject["image_base64_uri"] : "";
+            $image = isset($jsonObject["image"]) ? $jsonObject["image"] : "";
 
             $beer = new Beer();
             $beer->setName($name);
@@ -152,7 +87,7 @@ try {
         }
     );
 
- $router->map(
+    $router->map(
         "PUT",
         "beers/[i:id]",
         function ($id) use ($beerController) {
@@ -176,8 +111,8 @@ try {
                 $alcohol = $json["alcohol"];
             }
             $image = "";
-            if (isset($json["image_base64_uri"])) {
-                $image = $json["image_base64_uri"];
+            if (isset($json["image"])) {
+                $image = $json["image"];
             }
 
             $beer = new Beer();
@@ -191,3 +126,16 @@ try {
             $beerController->putBeer($beer);
         }
     );
+
+    $match = $router->match();
+    if ($match && is_callable($match["target"])) {
+        call_user_func_array($match["target"], $match["params"]);
+    } else {
+        http_response_code(400);
+    }
+} catch (InvalidArgumentException $exception) {
+    http_response_code(400);
+
+} catch (Exception $exception) {
+    http_response_code(500);
+}
