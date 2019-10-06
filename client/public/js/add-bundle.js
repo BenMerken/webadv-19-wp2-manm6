@@ -1119,7 +1119,7 @@ eval("\n\nObject.defineProperty(exports, \"__esModule\", {\n    value: true\n});
 /*! exports provided: url, default */
 /***/ (function(module) {
 
-eval("module.exports = {\"url\":\"http://192.168.88.254/api/beers\"};\n\n//# sourceURL=webpack:///./src/serverUrl.json?");
+eval("module.exports = {\"url\":\"http://192.168.33.22/api/beers\"};\n\n//# sourceURL=webpack:///./src/serverUrl.json?");
 
 /***/ }),
 
